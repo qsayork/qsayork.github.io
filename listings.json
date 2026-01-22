@@ -1,0 +1,43 @@
+[
+  {
+    "listing": "/people/powell-ben/index.html",
+    "items": [
+      "/publications/2018_1_Placeholder_paper/index.html"
+    ]
+  },
+  {
+    "listing": "/people/index.html",
+    "items": [
+      "/people/hargreaves-jess/index.html",
+      "/people/powell-ben/index.html"
+    ]
+  },
+  {
+    "listing": "/news/index.html",
+    "items": [
+      "/news/2026_1_20_nb/index.html",
+      "/news/2025_12_10_fac/index.html",
+      "/news/CopyOf2025_12_10_fac/index.html"
+    ]
+  },
+  {
+    "listing": "/posts/index.html",
+    "items": [
+      "/posts/the_split/SPLitBlogPost.html",
+      "/posts/basketball_1/index.html"
+    ]
+  },
+  {
+    "listing": "/people/hargreaves-jess/index.html",
+    "items": [
+      "/publications/2018_1_Placeholder_paper/index.html",
+      "/posts/the_split/SPLitBlogPost.html"
+    ]
+  },
+  {
+    "listing": "/publications/index.html",
+    "items": [
+      "/publications/2018_1_Placeholder_paper/index.html"
+    ]
+  }
+]
