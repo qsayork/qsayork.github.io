@@ -13,7 +13,9 @@ categories:
 
 ```{r}
 #| include: false
-library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(readr)
 library(gridExtra)
 all_seasons_times <- read_csv("all_seasons_game_logs_plus.csv")
 all_seasons_info <- read_csv("all_seasons_info.csv")

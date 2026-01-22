@@ -2,7 +2,7 @@
 title: "The SPLit"
 author: "Jess Hargreaves"
 format: html
-editor: visual
+editor: source
 description: "The Scottish Premier League splits into two for a playoff structure.  Does this have unintended consequences?"
 date: "3/12/2025"
 bibliography: references.bib
@@ -19,7 +19,6 @@ categories:
 library(ggplot2)
 library(plotly)
 library(ggiraph)
-library(tidyverse)
 library(readxl)
 library(highcharter) 
 # Set highcharter options
