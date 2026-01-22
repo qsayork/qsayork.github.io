@@ -52,11 +52,10 @@ about:
 
 <br>
 
-## {{< meta first >}}' logs
+## {{< meta first >}}' blogs
 
 ::: {#blogs}
 :::
-
 
 <br>
 
@@ -64,4 +63,3 @@ about:
 
 ::: {#pubs}
 :::
-
