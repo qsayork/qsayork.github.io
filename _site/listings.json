@@ -13,16 +13,16 @@
     ]
   },
   {
-    "listing": "/publications/index.html",
-    "items": [
-      "/publications/2018_1_Placeholder_paper/index.html"
-    ]
-  },
-  {
     "listing": "/posts/index.html",
     "items": [
       "/posts/the_split/SPLitBlogPost.html",
       "/posts/basketball_1/index.html"
+    ]
+  },
+  {
+    "listing": "/publications/index.html",
+    "items": [
+      "/publications/2018_1_Placeholder_paper/index.html"
     ]
   },
   {
