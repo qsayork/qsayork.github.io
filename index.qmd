@@ -1,0 +1,10 @@
+---
+#title: "Home"
+page-layout: full
+---
+
+::: content-container
+![](images/weblogo.png){fig-alt="Quantitative Sports Analysis: York" fig-align="center"}
+
+Welcome to the Quantitative Sports Analysis group at the University of York. We are a group of Mathematicians, Statisticians and Data Scientists mainly based in the [Department of Mathematics](https://www.york.ac.uk/maths/) at the University of York. We are interested in using quantitative methods to study the wealth of data produced by *all* kinds of **sports**. We aim to produce insights that will be interesting to **competitors**, **sporting organisations**, **viewers** and **teams**. See the blog for more examples our work.
+:::

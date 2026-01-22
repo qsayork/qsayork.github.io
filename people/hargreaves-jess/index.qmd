@@ -1,0 +1,67 @@
+---
+title: &TITLE Jess Hargreaves
+last: Hargreaves
+first: Jess
+subtitle: "Mathmagician"
+people_group: "academic"
+email: "not_here@gmail.com"
+education:
+  - Ph.D. Stats | Somewhere University <br> BSc Ball-knowing | University of the Streets <br> A-level podcasting  | School of Ponte Carlo
+description: "\"Ben Powell is a legend\"- Jess Hargreaves"
+image: JessicaHargreaves.jpg
+page-layout: full
+listing:
+  - id: pubs
+    template: ../../_ejs/publications-people.ejs 
+    contents: 
+      - "../../../publications/**/*.qmd"
+      - "!../../../publications/_template/"
+    sort: "pub_number desc"
+    # sort-ui: true
+    filter-ui: true
+    include:
+      author: *TITLE
+    fields: [publication, title, categories, image, date, author]
+  - id: blogs
+    contents: 
+      - "../../../posts/**/*.qmd"
+    sort: "date desc"
+    # sort-ui: true
+    filter-ui: true
+    include:
+      author: *TITLE
+    fields: [title, date, description]
+about: 
+  id: about
+  template: solana
+  image-shape: rectangle
+  image: JessicaHargreaves.jpg
+  links:
+    - icon: envelope
+      text: Email
+      href: mailto:not_here@gmail.com
+---
+
+<hr>
+
+::: {#about}
+## Background
+
+{{< meta education >}}
+:::
+
+<br>
+
+## {{< meta first >}}' logs
+
+::: {#blogs}
+:::
+
+
+<br>
+
+## {{< meta first >}}' Group Publications
+
+::: {#pubs}
+:::
+

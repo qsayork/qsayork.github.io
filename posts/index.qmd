@@ -1,0 +1,10 @@
+---
+title: Blog 
+listing: 
+  type: grid 
+  sort: "date desc" 
+  fields: [date, title, description, author] 
+  categories: true
+  filter-ui: true
+page-layout: full
+---

@@ -1,0 +1,47 @@
+project:
+  type: website
+
+website:
+  title: QSAY
+  favicon: images/qsay_logo_q.png
+  page-navigation: false
+  page-footer:
+    background: "#F0F0F0"
+    center: 2026 &middot; Made with ![](https://www.r-project.org/Rlogo.png){width=20px} and [![](https://quarto.org/quarto.png){fig-alt="Quarto" width=65px}](https://quarto.org/)
+    right:
+      - icon: github
+        href: https://github.com/qsayork/home
+  navbar:
+    search: true
+    title: false
+    logo: images/qsay_logo.png
+    #background: "#F0F0F0"
+    logo-alt: "QSAY"
+    right:
+      - href: index.qmd
+        text: Home
+      - href: people/index.qmd
+        text: People
+      - href: posts/index.qmd
+        text: Blog
+      - href: publications/index.qmd
+        text: Publications
+      - href: news/index.qmd
+        text: News
+      - href: https://www.youtube.com/@CorridorOfUncertainty
+        text: "Corridor of Uncertainty"
+
+format:
+  html:
+    theme:
+      - custom.scss
+      - minty
+    backgroundcolor: "#f0f0f0"
+    css: styles.css
+    toc: true
+    link-external-newwindow: true
+    date-format: "MMM YYYY"
+    smooth-scroll: true
+
+editor: visual
+

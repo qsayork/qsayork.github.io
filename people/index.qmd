@@ -1,0 +1,70 @@
+---
+title: "Meet the QSAY Group"
+listing:
+  - id: academic
+    include: 
+      people_group: "academic"
+    exclude:
+      external: true
+    template: ../_ejs/people-box.ejs
+    sort: last
+    type: grid
+    fields: [title, subtitle, image]
+  - id: postdoc
+    include: 
+      people_group: "postdoc"
+    exclude:
+      external: true
+    template: ../_ejs/people-box.ejs
+    sort: last    
+    type: grid
+    fields: [title, subtitle, image]
+  - id: phdstudent
+    include: 
+      people_group: "phdstudent"
+    exclude:
+      external: true
+    template: ../_ejs/people-box.ejs
+    sort: last
+    type: grid
+    fields: [title, subtitle, image]
+  - id: undergrad
+    include: 
+      people_group: "undergrad"
+    exclude:
+      external: true
+    template: ../_ejs/people-box.ejs
+    sort: last
+    type: grid
+    fields: [title, subtitle, image]
+  - id: external
+    include: 
+      people_group: "external"
+    exclude:
+      external: true
+    template: ../_ejs/alumni-box.ejs
+    sort: last
+    type: grid
+    fields: [title, subtitle, image, affiliation]
+page-layout: full
+---
+
+## Academic Staff
+
+::: {#academic}
+:::
+
+## Postdoctoral Fellows
+
+::: {#postdoc}
+:::
+
+## PhD Students
+
+::: {#phdstudent}
+:::
+
+## Undergraduate Students
+
+::: {#undergrad}
+:::

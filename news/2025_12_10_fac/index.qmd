@@ -1,0 +1,8 @@
+---
+title: "Football Analytics Conference 2025"
+date: '2025-12-10'
+image: IMG_0871.heic
+description: "Jess spoke to the head of the Independent Football Regulator, asking him where babies come from.  I'm not sure he knows..."
+---
+
+Here is some extra text about it, including the image. ![Here\'s Jess](IMG_0871.heic "Mets Suck!")
