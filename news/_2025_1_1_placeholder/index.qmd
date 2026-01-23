@@ -1,0 +1,11 @@
+---
+title: "Placeholder Title"
+date: '2025-12-8'
+image: image1.jpg
+description: "This is just a placeholder entry"
+editor: 'source'
+---
+
+## Here is a title
+
+Here is where you would include text in a news post ![Here's Lucy](image1.jpg "Mets Suck!")

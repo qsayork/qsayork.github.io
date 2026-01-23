@@ -47,6 +47,7 @@ listing:
     type: grid
     fields: [title, subtitle, image, affiliation]
 page-layout: full
+editor: 'source'
 ---
 
 ## Academic Staff

@@ -1,13 +1,13 @@
 ---
-title: &TITLE Ben Powell
-last: Powell
-first: Ben
-subtitle: "Stats Samurai"
-people_group: "academic"
-email: "not_here@gmail.com"
+title: &TITLE Place Holder
+last: Holder
+first: Place
+subtitle: "Job Title"
+people_group: "academic/postdoc/phdstudent/undergrad"
+email: "your@email.com"
 education:
-  - Ph.D. Stats | Somewhere University <br> BSc Ballet | University of Life <br> A-level  Domestic Science | School of Hard Knocks
-description: "\"Ben Powell is a legend\"- Ben Powell"
+  - Use | to separate qualification and place <br> Use br to separate lines <br> Maybe don't include A-levels?
+description: "This is not used in this template"
 image: deloitte-uk-ben-powell-profile.webp
 page-layout: full
 listing:
@@ -30,7 +30,8 @@ about:
   links:
     - icon: envelope
       text: Email
-      href: mailto:not_here@gmail.com
+      href: mailto:your@email.com
+editor: 'source'
 ---
 
 <hr>

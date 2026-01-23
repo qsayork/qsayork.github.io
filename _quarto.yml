@@ -34,8 +34,8 @@ website:
 format:
   html:
     theme:
-      - custom.scss
-      - minty
+      light: [custom.scss, minty]
+      dark: [custom.scss, quartz]
     backgroundcolor: "#f0f0f0"
     css: styles.css
     toc: true

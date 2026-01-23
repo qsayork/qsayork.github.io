@@ -1,0 +1,14 @@
+---
+title: "Placeholder blog post"
+date: "2/22/2022"
+author: "Ben Powell"
+description: "Random Title?"
+format: html
+editor: source
+bibliography: references.bib
+categories:
+  - Basketball
+  - NBA
+---
+
+

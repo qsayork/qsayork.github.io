@@ -1,6 +1,6 @@
 ---
 title: "New Website 2026"
-date: '2025-12-10'
+date: '2025-12-8'
 image: image1.jpg
 description: "This is an extra test entry"
 ---
