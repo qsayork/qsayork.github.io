@@ -1,5 +1,12 @@
 [
   {
+    "objectID": "publications/index.html",
+    "href": "publications/index.html",
+    "title": "Publications",
+    "section": "",
+    "text": "This is just a Placeholder\n            \n            \n                \n                \n                    Ben Powell, Jess Hargreaves, A.N. Other, Alan Smithee \n                \n                \n                \n                    \n                        Test journal, 5, 3272-3281 (2018)\n                        \n                        \n                        \n                        \n                        \n                        \n                \n                    \n                    \n                    \n            \n \n        \n        \n            \n                \n                     \n                \n\n            \n            \n            \n\n                    \n                    journal URL \n                    \n                \n                    \n\n            \n\n        \n    \n    \n    \n    \n\nNo matching items"
+  },
+  {
     "objectID": "people/powell-ben/index.html#background",
     "href": "people/powell-ben/index.html#background",
     "title": "Ben Powell",
@@ -63,11 +70,11 @@
     "text": "Here is some extra text about it, including the image."
   },
   {
-    "objectID": "news/index.html",
-    "href": "news/index.html",
-    "title": "News",
+    "objectID": "news/CopyOf2025_12_10_fac/index.html",
+    "href": "news/CopyOf2025_12_10_fac/index.html",
+    "title": "Football Analytics Conference 2025b",
     "section": "",
-    "text": "New Website 2026\n\n\nThis is an extra test entry\n\n\n\n\n\nDec 2025\n\n\n\n\n\n\n\n\n\n\n\n\nFootball Analytics Conference 2025\n\n\nJess spoke to the head of the Independent Football Regulator, asking him where babies come from. I’m not sure he knows…\n\n\n\n\n\nDec 2025\n\n\n\n\n\n\n\n\n\n\n\n\nFootball Analytics Conference 2025b\n\n\nJess spoke to the head of the Independent Football Regulator, asking him where babies come from. I’m not sure he knows…\n\n\n\n\n\nDec 2025\n\n\n\n\n\nNo matching items"
+    "text": "Here is some extra text about it, including the image."
   },
   {
     "objectID": "posts/basketball_1/index.html",
@@ -175,18 +182,18 @@
     "text": "References\n\n\nLenten, Liam JA. 2008. “Unbalanced Schedules and the Estimation of Competitive Balance in the Scottish Premier League.” Scottish Journal of Political Economy 55 (4): 488–508.\n\n\nReilly, Barry, and Robert Witt. 2024. “The Effect of League Design on Club Revenues in the Scottish Premier League.” Eastern Economic Journal 50 (1): 1–28.\n\n\nThistlethwaite, Donald L, and Donald T Campbell. 1960. “Regression-Discontinuity Analysis: An Alternative to the Ex Post Facto Experiment.” Journal of Educational Psychology 51 (6): 309."
   },
   {
-    "objectID": "news/2026_1_20_nb/index.html",
-    "href": "news/2026_1_20_nb/index.html",
+    "objectID": "news/index.html",
+    "href": "news/index.html",
+    "title": "News",
+    "section": "",
+    "text": "Football Analytics Conference 2025\n\n\nJess spoke to the head of the Independent Football Regulator, asking him where babies come from. I’m not sure he knows…\n\n\n\n\n\nDec 2025\n\n\n\n\n\n\n\n\n\n\n\n\nNew Website 2026\n\n\nThis is an extra test entry\n\n\n\n\n\nDec 2025\n\n\n\n\n\n\n\n\n\n\n\n\nFootball Analytics Conference 2025b\n\n\nJess spoke to the head of the Independent Football Regulator, asking him where babies come from. I’m not sure he knows…\n\n\n\n\n\nDec 2025\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "news/2025_12_10_nb/index.html",
+    "href": "news/2025_12_10_nb/index.html",
     "title": "New Website 2026",
     "section": "",
     "text": "Here is some extra text about it, including another image."
-  },
-  {
-    "objectID": "news/CopyOf2025_12_10_fac/index.html",
-    "href": "news/CopyOf2025_12_10_fac/index.html",
-    "title": "Football Analytics Conference 2025b",
-    "section": "",
-    "text": "Here is some extra text about it, including the image."
   },
   {
     "objectID": "about.html",
@@ -215,12 +222,5 @@
     "title": "Jess Hargreaves",
     "section": "Jess’ Group Publications",
     "text": "Jess’ Group Publications\n\n\n    \n      \n      \n    \n\n\n    \n    \n    \n        \n            \n\n                \n                    \n                    \n                    \n\n                \n      \n\n            \n        \n        \n            \n            This is just a Placeholder\n            \n            \n                \n                \n                    Ben Powell, Jess Hargreaves, A.N. Other, Alan Smithee \n                \n                \n                \n                    \n                        Test journal, 5, 3272-3281 (2018)\n                        \n                        \n                        \n                        \n                        \n                        \n                \n                    \n                    \n                    \n            \n \n        \n        \n\n            \n            \n\n                    \n                    journal URL \n                    \n                \n                    \n  \n              \n\n        \n    \n    \n    \n    \n\nNo matching items"
-  },
-  {
-    "objectID": "publications/index.html",
-    "href": "publications/index.html",
-    "title": "Publications",
-    "section": "",
-    "text": "This is just a Placeholder\n            \n            \n                \n                \n                    Ben Powell, Jess Hargreaves, A.N. Other, Alan Smithee \n                \n                \n                \n                    \n                        Test journal, 5, 3272-3281 (2018)\n                        \n                        \n                        \n                        \n                        \n                        \n                \n                    \n                    \n                    \n            \n \n        \n        \n            \n                \n                     \n                \n\n            \n            \n            \n\n                    \n                    journal URL \n                    \n                \n                    \n\n            \n\n        \n    \n    \n    \n    \n\nNo matching items"
   }
 ]
