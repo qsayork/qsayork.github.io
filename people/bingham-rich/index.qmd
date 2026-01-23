@@ -1,0 +1,50 @@
+---
+title: &TITLE Rich Bingham
+last: Bingham
+first: Rich
+subtitle: "Lecturer"
+people_group: "academic"
+email: "your@email.com"
+education:
+  - Start | End <br> Test | Test2  <br> E in GCSE German <br> Governor of Connacht 
+description: "This is not used in this template"
+image: SirRichardBingham.jpg
+page-layout: full
+listing:
+  id: pubs
+  template: ../../_ejs/publications-people.ejs 
+  contents: 
+    - "../../../publications/**/*.qmd"
+    - "!../../../publications/_template/"
+  sort: "pub_number desc"
+  # sort-ui: true
+  filter-ui: true
+  include:
+    author: *TITLE
+  fields: [publication, title, categories, image, date, author]
+about: 
+  id: about
+  template: solana
+  image-shape: rectangle
+  image: SirRichardBingham.jpg
+  links:
+    - icon: envelope
+      text: Email
+      href: mailto:your@email.com
+editor: 'source'
+---
+
+<hr>
+
+::: {#about}
+## Education
+
+{{< meta education >}}
+:::
+
+<br>
+
+## {{< meta first >}}'s Group Publications
+
+::: {#pubs}
+:::
