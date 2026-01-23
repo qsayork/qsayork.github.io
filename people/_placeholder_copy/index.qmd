@@ -44,6 +44,13 @@ editor: 'source'
 
 <br>
 
+## {{< meta first >}}' blogs
+
+::: {#blogs}
+:::
+
+<br>
+
 ## {{< meta first >}}'s Group Publications
 
 ::: {#pubs}
