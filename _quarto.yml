@@ -35,7 +35,7 @@ format:
   html:
     theme:
       light: [custom.scss, minty]
-      dark: [custom.scss, quartz]
+      dark: [custom.scss, slate]
     backgroundcolor: "#f0f0f0"
     css: styles.css
     toc: true
