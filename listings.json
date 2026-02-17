@@ -1,27 +1,18 @@
 [
   {
-    "listing": "/publications/index.html",
+    "listing": "/people/bingham-rich/index.html",
+    "items": []
+  },
+  {
+    "listing": "/people/powell-ben/index.html",
     "items": [
       "/publications/2018_1_random_paper/index.html"
     ]
   },
   {
-    "listing": "/people/bingham-rich/index.html",
-    "items": []
-  },
-  {
-    "listing": "/people/hargreaves-jess/index.html",
+    "listing": "/publications/index.html",
     "items": [
-      "/publications/2018_1_random_paper/index.html",
-      "/posts/the_split/SPLitBlogPost.html"
-    ]
-  },
-  {
-    "listing": "/news/index.html",
-    "items": [
-      "/news/2025_12_10_fac/index.html",
-      "/news/2025_12_10_nb/index.html",
-      "/news/CopyOf2025_12_10_fac/index.html"
+      "/publications/2018_1_random_paper/index.html"
     ]
   },
   {
@@ -40,9 +31,18 @@
     ]
   },
   {
-    "listing": "/people/powell-ben/index.html",
+    "listing": "/people/hargreaves-jess/index.html",
     "items": [
-      "/publications/2018_1_random_paper/index.html"
+      "/publications/2018_1_random_paper/index.html",
+      "/posts/the_split/SPLitBlogPost.html"
+    ]
+  },
+  {
+    "listing": "/news/index.html",
+    "items": [
+      "/news/2025_12_10_fac/index.html",
+      "/news/2025_12_10_nb/index.html",
+      "/news/CopyOf2025_12_10_fac/index.html"
     ]
   }
 ]
