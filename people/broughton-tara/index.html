@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Statistician/data scientist/mathematician with interests in both foundations and applications.">
+<meta name="description" content="This is not used in this template">
 
-<title>Ben Powell – QSAY</title>
+<title>Tara Broughton – QSAY</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,41 +81,13 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-publication','listing-title','listing-categories','listing-image','listing-date','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-date-modified-sort'] },{ data: ['listing-file-modified-sort'] },{ data: ['listing-reading-time-sort'] },{ data: ['listing-word-count-sort'] }],
+      valueNames: ['listing-publication','listing-title','listing-categories','listing-image','listing-date','listing-author',{ data: ['index'] },{ data: ['categories'] }],
       
-      searchColumns: ["listing-project","listing-website","listing-format","listing-editor","listing-language","listing-title","listing-date","listing-author","listing-publication","listing-categories","listing-url_source","listing-url_preprint","listing-journ","listing-page","listing-year","listing-image","listing-path","listing-outputHref","listing-date-modified","listing-description","listing-filename","listing-file-modified","listing-reading-time","listing-word-count","listing-issue","listing-volume"],
+      searchColumns: [],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
     window['quarto-listings']['listing-pubs'] = new List('listing-pubs', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-blogs .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-title','listing-date','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-image"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-blogs'] = new List('listing-blogs', options);
 
     if (window['quarto-listing-loaded']) {
       window['quarto-listing-loaded']();
@@ -221,10 +193,10 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a></li>
+  <li><a href="#education" id="toc-education" class="nav-link active" data-scroll-target="#education">Education</a></li>
   <li><a href="#research-interests" id="toc-research-interests" class="nav-link" data-scroll-target="#research-interests">Research Interests</a></li>
-  <li><a href="#s-blogs" id="toc-s-blogs" class="nav-link" data-scroll-target="#s-blogs">Ben’s blogs</a></li>
-  <li><a href="#s-group-publications" id="toc-s-group-publications" class="nav-link" data-scroll-target="#s-group-publications">Ben’s Group Publications</a></li>
+  <li><a href="#blogs" id="toc-blogs" class="nav-link" data-scroll-target="#blogs">Tara’ blogs</a></li>
+  <li><a href="#s-group-publications" id="toc-s-group-publications" class="nav-link" data-scroll-target="#s-group-publications">Tara’s Group Publications</a></li>
   </ul>
 </nav>
     </div>
@@ -240,30 +212,30 @@ window.Quarto = {
     <div class="entity-contents">
       <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Ben Powell</h1>
-<p class="subtitle lead">Lecturer in Statistics</p>
+<h1 class="title">Tara Broughton</h1>
+<p class="subtitle lead">EPSRC PhD Student</p>
 </div>
 <div>
   <div class="description">
-    Statistician/data scientist/mathematician with interests in both foundations and applications.
+    This is not used in this template
   </div>
 </div>
 <div class="quarto-title-meta column-page-left">
   </div>
 </header> <div class="about-links">
-  <a href="mailto:not_here@gmail.com" class="about-link" rel="" target="">
+  <a href="mailto:your@email.com" class="about-link" rel="" target="">
     <i class="bi bi-envelope"></i>
      <span class="about-link-text">Email</span>
   </a>
 </div>
       <div class="about-contents"><div id="about">
-<section id="background" class="level2">
-<h2 data-anchor-id="background">Background</h2>
-<p>Ph.D | University of Durham <br> MMath | University of Durham</p>
+<section id="education" class="level2">
+<h2 data-anchor-id="education">Education</h2>
+<p>MMath in Mathematics | University of York</p>
 </section>
 </div></div>
     </div>
-    <img src="bpowell_profile_pic_2323_v2.png" class="about-image
+    <img src="unnamed.jpg" class="about-image
   rectangle " style="width: 15em;">
   </div>
 </div>
@@ -271,26 +243,17 @@ window.Quarto = {
 <p><br></p>
 <section id="research-interests" class="level2">
 <h2 data-anchor-id="research-interests">Research Interests</h2>
-<p>My research involves the identification and quantification of patterns in past data that allow us to predict future data. The general strategy is to work with domain experts to solve a problem that interests them. We publish the findings we make and the tools we develop along the way so that other people can use them to solve their own problems.</p>
+<p>I am interested in determining the impact of an event and evaluating its significance, as well as investigating how much data is required to draw these conclusions. I have been a football fan since growing up, so I enjoy applying these methods to football data.</p>
 </section>
-<section id="s-blogs" class="level2">
-<h2 data-anchor-id="s-blogs">Ben’s blogs</h2>
-<div id="listing-blogs" class="quarto-listing quarto-listing-container-default">
-<div class="listing-actions-group">
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
-</div>
-<div class="list quarto-listing-default">
+<section id="blogs" class="level2">
+<h2 data-anchor-id="blogs">Tara’ blogs</h2>
+<div id="blogs">
 
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
 </div>
 <p><br></p>
 </section>
 <section id="s-group-publications" class="level2">
-<h2 data-anchor-id="s-group-publications">Ben’s Group Publications</h2>
+<h2 data-anchor-id="s-group-publications">Tara’s Group Publications</h2>
 <div id="listing-pubs" class="quarto-listing quarto-listing-container-custom">
 <div class="listing-actions-group">
     <div class="input-group input-group-sm quarto-listing-filter">
@@ -299,260 +262,6 @@ window.Quarto = {
     </div>
 </div>
 <div class="list quarto-listing-default">
-    
-    
-    <div class="quarto-post image-right" data-index="0" data-categories="Rm9vdGJhbGw=" data-listing-date-sort="1657584000000" data-listing-file-modified-sort="1772649852258" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1">
-        <div class="thumbnail">
-            <!-- <a href="/publications/22_bookings/index.qmd"> -->
-
-                <p>
-                    
-                    <img alt="Modelling bookings in association football" src="../../publications/22_bookings/image_1.png" class="thumbnail-image">
-                    
-
-                </p>
-      
-
-            <!-- </a> -->
-        </div>
-        <div class="body">
-            <!-- <a href="/publications/22_bookings/index.qmd"> -->
-            <div class="no-anchor listing-pub-title listing-title">Modelling bookings in association football</div>
-            <!-- </a> -->
-            <!-- <a href="/publications/22_bookings/index.qmd"> -->
-                
-                <div class="listing-pub-author listing-author">
-                    Jess Hargreaves, Ben Powell<br> 
-                </div>
-                
-                <div class="metadata-value listing-pub-journal listing-publication">
-                    
-                        <i>Proceedings of MathSport International 2022 Conference</i>, 34-44 (2022)<br>
-                        
-                        
-                        
-                        
-                        
-                        
-                </div>
-                    
-                    
-                    
-            <!-- </a> -->
- <!--               <div class="listing-categories">
-                
-                <div class="listing-category" onclick="window.quartoListingCategory('Football'); return false;">Football</div>
-                
-                </div>
-                -->
-        </div>
-        <div class="metadata">
-
-            
-            <div class="listing-pub-url">
-
-                    <a href="https://eprints.whiterose.ac.uk/id/eprint/229624/">
-                    <p style="color:#8250E6;">journal URL <i class="bi bi-box-arrow-up-right"></i></p>
-                    </a>
-                </div>
-                    
-  
-              
-
-        </div>
-    </div>
-    
-    
-    
-    <div class="quarto-post image-right" data-index="1" data-categories="TW90b3IlMjBSYWNpbmclMkNTdGF0aXN0aWNhbCUyME1ldGhvZG9sb2d5" data-listing-date-sort="1695859200000" data-listing-file-modified-sort="1772649852259" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1">
-        <div class="thumbnail">
-            <!-- <a href="/publications/23_elo/index.qmd"> -->
-
-                <p>
-                    
-                    <img alt="Generalizing the Elo rating system for multiplayer games and races: why endurance is better than speed" src="../../publications/23_elo/image.png" class="thumbnail-image">
-                    
-
-                </p>
-      
-
-            <!-- </a> -->
-        </div>
-        <div class="body">
-            <!-- <a href="/publications/23_elo/index.qmd"> -->
-            <div class="no-anchor listing-pub-title listing-title">Generalizing the Elo rating system for multiplayer games and races: why endurance is better than speed</div>
-            <!-- </a> -->
-            <!-- <a href="/publications/23_elo/index.qmd"> -->
-                
-                <div class="listing-pub-author listing-author">
-                    Ben Powell<br> 
-                </div>
-                
-                <div class="metadata-value listing-pub-journal listing-publication">
-                    
-                        <i>Journal of Quantitative Analysis in Sports</i>, <b>3</b>, 223-243 (2023)<br>
-                        
-                        
-                        
-                        
-                        
-                        
-                </div>
-                    
-                    
-                    
-            <!-- </a> -->
- <!--               <div class="listing-categories">
-                
-                <div class="listing-category" onclick="window.quartoListingCategory('Motor Racing'); return false;">Motor Racing</div>
-                
-                <div class="listing-category" onclick="window.quartoListingCategory('Statistical Methodology'); return false;">Statistical Methodology</div>
-                
-                </div>
-                -->
-        </div>
-        <div class="metadata">
-
-            
-            <div class="listing-pub-url">
-
-                    <a href="https://eprints.whiterose.ac.uk/id/eprint/200471/1/Generalizing_Elo_deGruyter.pdf">
-                    <p style="color:#8250E6;">journal URL <i class="bi bi-box-arrow-up-right"></i></p>
-                    </a>
-                </div>
-                    
-  
-              
-
-        </div>
-    </div>
-    
-    
-    
-    <div class="quarto-post image-right" data-index="2" data-categories="U3RhdGlzdGljYWwlMjBNZXRob2RvbGd5" data-listing-date-sort="1718064000000" data-listing-file-modified-sort="1772649852260" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1">
-        <div class="thumbnail">
-            <!-- <a href="/publications/24_skew/index.qmd"> -->
-
-                <p>
-                    
-                    <img alt="Skew-adjusted extremized-mean: A simple method for identifying and learning from contrarian minorities in groups of forecasters" src="../../publications/24_skew/image.png" class="thumbnail-image">
-                    
-
-                </p>
-      
-
-            <!-- </a> -->
-        </div>
-        <div class="body">
-            <!-- <a href="/publications/24_skew/index.qmd"> -->
-            <div class="no-anchor listing-pub-title listing-title">Skew-adjusted extremized-mean: A simple method for identifying and learning from contrarian minorities in groups of forecasters</div>
-            <!-- </a> -->
-            <!-- <a href="/publications/24_skew/index.qmd"> -->
-                
-                <div class="listing-pub-author listing-author">
-                    Ben Powell, Ville A Satopää, Niall MacKay, Philip E Tetlock<br> 
-                </div>
-                
-                <div class="metadata-value listing-pub-journal listing-publication">
-                    
-                        <i>Decision</i>, <b>1</b>, 173-193 (2024)<br>
-                        
-                        
-                        
-                        
-                        
-                        
-                </div>
-                    
-                    
-                    
-            <!-- </a> -->
- <!--               <div class="listing-categories">
-                
-                <div class="listing-category" onclick="window.quartoListingCategory('Statistical Methodolgy'); return false;">Statistical Methodolgy</div>
-                
-                </div>
-                -->
-        </div>
-        <div class="metadata">
-
-            
-            <div class="listing-pub-url">
-
-                    <a href="https://eprints.whiterose.ac.uk/id/eprint/188361/1/skew_adjusted_extremized_mean_v5_cleaned_of_comments.pdf">
-                    <p style="color:#8250E6;">journal URL <i class="bi bi-box-arrow-up-right"></i></p>
-                    </a>
-                </div>
-                    
-  
-              
-
-        </div>
-    </div>
-    
-    
-    
-    <div class="quarto-post image-right" data-index="3" data-categories="U3RhdGlzdGljYWwlMjBNZXRob2Rz" data-listing-date-sort="1750809600000" data-listing-file-modified-sort="1772649852265" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1">
-        <div class="thumbnail">
-            <!-- <a href="/publications/25_kairosis/index.qmd"> -->
-
-                <p>
-                    
-                    <img alt="Kairosis: A method for dynamical probability forecast aggregation informed by Bayesian change-point detection" src="../../publications/25_kairosis/image.png" class="thumbnail-image">
-                    
-
-                </p>
-      
-
-            <!-- </a> -->
-        </div>
-        <div class="body">
-            <!-- <a href="/publications/25_kairosis/index.qmd"> -->
-            <div class="no-anchor listing-pub-title listing-title">Kairosis: A method for dynamical probability forecast aggregation informed by Bayesian change-point detection</div>
-            <!-- </a> -->
-            <!-- <a href="/publications/25_kairosis/index.qmd"> -->
-                
-                <div class="listing-pub-author listing-author">
-                    Zane Hassoun, Niall MacKay, Ben Powell<br> 
-                </div>
-                
-                <div class="metadata-value listing-pub-journal listing-publication">
-                    
-                        <i>International journal of forecasting</i>, <b>1</b>, 112-125 (2025)<br>
-                        
-                        
-                        
-                        
-                        
-                        
-                </div>
-                    
-                    
-                    
-            <!-- </a> -->
- <!--               <div class="listing-categories">
-                
-                <div class="listing-category" onclick="window.quartoListingCategory('Statistical Methods'); return false;">Statistical Methods</div>
-                
-                </div>
-                -->
-        </div>
-        <div class="metadata">
-
-            
-            <div class="listing-pub-url">
-
-                    <a href="https://www.sciencedirect.com/science/article/abs/pii/S0169207025000299">
-                    <p style="color:#8250E6;">journal URL <i class="bi bi-box-arrow-up-right"></i></p>
-                    </a>
-                </div>
-                    
-  
-              
-
-        </div>
-    </div>
-    
     
     </div>
 
