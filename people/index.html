@@ -165,9 +165,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-title','listing-subtitle','listing-image','listing-affiliation',{ data: ['index'] },{ data: ['categories'] }],
+      valueNames: ['listing-title','listing-subtitle','listing-image','listing-affiliation',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-file-modified-sort'] },{ data: ['listing-reading-time-sort'] },{ data: ['listing-word-count-sort'] }],
       
-      searchColumns: [],
+      searchColumns: ["listing-project","listing-website","listing-format","listing-editor","listing-language","listing-title","listing-last","listing-first","listing-subtitle","listing-people_group","listing-email","listing-education","listing-description","listing-image","listing-page-layout","listing-listing","listing-about","listing-path","listing-outputHref","listing-author","listing-filename","listing-file-modified","listing-reading-time","listing-word-count"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -500,8 +500,78 @@ window.Quarto = {
 
 <div class="quarto-listing quarto-listing-container-grid">
   
-  <div class="list grid quarto-listing-cols-4"> 
+  <div class="list grid quarto-listing-cols-3"> 
 
+     
+    
+    <div class="g-col-1 listing-box">
+      
+      
+      
+      <a href="../people/rees_lindley-alun/index.html" role="button" class="quarto-grid-link">
+        <div class="quarto-grid-item card h-100 card-left">
+          
+          
+          <p class="card-img-top">
+            <img alt="Alun Rees-Lindley" src="../people/rees_lindley-alun/AlunReesLindley.png" class="thumbnail-image card-img listing-box-image" style="height" 150px;"="">
+          </p>
+          
+          <div class="card-body post-contents">
+            
+            <div class="listing-box-title">
+              Alun Rees-Lindley<br> 
+            </div>
+               
+            <div class="listing-box-subtitle">
+              Statistical Methodologist @ ONS<br>
+            </div>
+                
+          
+                  
+
+            
+            
+          </div>  
+        </div>  
+      </a>
+      
+    </div>
+  
+     
+    
+    <div class="g-col-1 listing-box">
+      
+      
+      
+      <a href="../people/stanley-rob/index.html" role="button" class="quarto-grid-link">
+        <div class="quarto-grid-item card h-100 card-left">
+          
+          
+          <p class="card-img-top">
+            <img alt="Robert Stanley" src="../people/stanley-rob/1738146852906.jpg" class="thumbnail-image card-img listing-box-image" style="height" 150px;"="">
+          </p>
+          
+          <div class="card-body post-contents">
+            
+            <div class="listing-box-title">
+              Robert Stanley<br> 
+            </div>
+               
+            <div class="listing-box-subtitle">
+              Performance Consultant/Coach Developer<br>
+            </div>
+                
+          
+                  
+
+            
+            
+          </div>  
+        </div>  
+      </a>
+      
+    </div>
+  
     
   
 </div>
