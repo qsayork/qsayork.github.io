@@ -1,7 +1,9 @@
 [
   {
     "listing": "/people/bingham-rich/index.html",
-    "items": []
+    "items": [
+      "/posts/basketball_1/index.html"
+    ]
   },
   {
     "listing": "/people/stanley-rob/index.html",
@@ -61,7 +63,9 @@
   },
   {
     "listing": "/people/rees_lindley-alun/index.html",
-    "items": []
+    "items": [
+      "/posts/superbowl/Superbowl-pregame-analysis.html"
+    ]
   },
   {
     "listing": "/news/index.html",
