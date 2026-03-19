@@ -36,8 +36,9 @@
   {
     "listing": "/posts/index.html",
     "items": [
-      "/posts/the_split/SPLitBlogPost.html",
-      "/posts/basketball_1/index.html"
+      "/posts/superbowl/Superbowl-pregame-analysis.html",
+      "/posts/basketball_1/index.html",
+      "/posts/the_split/SPLitBlogPost.html"
     ]
   },
   {
@@ -65,7 +66,9 @@
   {
     "listing": "/news/index.html",
     "items": [
-      "/news/2025_fac/index.html"
+      "/news/2026_3_13_roses/index.html",
+      "/news/2025_fac/index.html",
+      "/news/2025_9_1_RSSinter/index.html"
     ]
   }
 ]

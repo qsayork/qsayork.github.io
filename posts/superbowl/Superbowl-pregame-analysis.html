@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Alun Rees-Lindley">
+<meta name="description" content="The most watched annual sporting event also generates a lot of interesting numbers. Can we predict the result?">
+
+<title>Predicting the Unpredictable: A Statistical Exploration of Super Bowl LX – QSAY</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/qsay_logo_q.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-7622a089f7d1bb2af12a0e4415591796.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../images/qsay_logo.png" alt="QSAY" class="navbar-logo light-content">
+    <img src="../../images/qsay_logo.png" alt="QSAY" class="navbar-logo dark-content">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../people/index.html"> 
+<span class="menu-text">People</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../posts/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications/index.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../news/index.html"> 
+<span class="menu-text">News</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.youtube.com/@CorridorOfUncertainty"> 
+<span class="menu-text">Corridor of Uncertainty</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#why-these-two-teams" id="toc-why-these-two-teams" class="nav-link" data-scroll-target="#why-these-two-teams">Why These Two Teams?</a></li>
+  <li><a href="#the-models" id="toc-the-models" class="nav-link" data-scroll-target="#the-models">The Models</a>
+  <ul class="collapse">
+  <li><a href="#elo-rating-system" id="toc-elo-rating-system" class="nav-link" data-scroll-target="#elo-rating-system">1. Elo Rating System</a></li>
+  <li><a href="#how-did-we-get-here" id="toc-how-did-we-get-here" class="nav-link" data-scroll-target="#how-did-we-get-here">How Did We Get Here?</a></li>
+  <li><a href="#baseline-historical-model" id="toc-baseline-historical-model" class="nav-link" data-scroll-target="#baseline-historical-model">2. Baseline Historical Model</a></li>
+  </ul></li>
+  <li><a href="#the-predictions" id="toc-the-predictions" class="nav-link" data-scroll-target="#the-predictions">The Predictions</a>
+  <ul class="collapse">
+  <li><a href="#win-probability" id="toc-win-probability" class="nav-link" data-scroll-target="#win-probability">Win Probability</a></li>
+  <li><a href="#expected-score-and-performance" id="toc-expected-score-and-performance" class="nav-link" data-scroll-target="#expected-score-and-performance">Expected Score and Performance</a></li>
+  <li><a href="#how-predicted-scores-are-calculated" id="toc-how-predicted-scores-are-calculated" class="nav-link" data-scroll-target="#how-predicted-scores-are-calculated">How Predicted Scores Are Calculated</a></li>
+  <li><a href="#how-this-compares-to-vegas" id="toc-how-this-compares-to-vegas" class="nav-link" data-scroll-target="#how-this-compares-to-vegas">How This Compares to Vegas</a></li>
+  </ul></li>
+  <li><a href="#what-the-models-cant-know" id="toc-what-the-models-cant-know" class="nav-link" data-scroll-target="#what-the-models-cant-know">What The Models Can’t Know</a></li>
+  <li><a href="#interpreting-probabilistic-predictions" id="toc-interpreting-probabilistic-predictions" class="nav-link" data-scroll-target="#interpreting-probabilistic-predictions">Interpreting Probabilistic Predictions</a></li>
+  <li><a href="#why-this-prediction-is-interesting" id="toc-why-this-prediction-is-interesting" class="nav-link" data-scroll-target="#why-this-prediction-is-interesting">Why This Prediction Is Interesting</a>
+  <ul class="collapse">
+  <li><a href="#going-against-the-bookies" id="toc-going-against-the-bookies" class="nav-link" data-scroll-target="#going-against-the-bookies">1. Going against the bookies’</a></li>
+  <li><a href="#quantifying-uncertainty-honestly" id="toc-quantifying-uncertainty-honestly" class="nav-link" data-scroll-target="#quantifying-uncertainty-honestly">2. Quantifying uncertainty honestly</a></li>
+  <li><a href="#testing-statistical-methods" id="toc-testing-statistical-methods" class="nav-link" data-scroll-target="#testing-statistical-methods">3. Testing statistical methods</a></li>
+  <li><a href="#appreciating-unpredictability" id="toc-appreciating-unpredictability" class="nav-link" data-scroll-target="#appreciating-unpredictability">4. Appreciating unpredictability</a></li>
+  </ul></li>
+  <li><a href="#what-happens-if-im-wrong" id="toc-what-happens-if-im-wrong" class="nav-link" data-scroll-target="#what-happens-if-im-wrong">What Happens if I’m wrong?</a></li>
+  <li><a href="#conclusion-the-honest-statisticians-role" id="toc-conclusion-the-honest-statisticians-role" class="nav-link" data-scroll-target="#conclusion-the-honest-statisticians-role">Conclusion: The Honest Statistician’s Role</a></li>
+  <li><a href="#technical-appendix" id="toc-technical-appendix" class="nav-link" data-scroll-target="#technical-appendix">Technical Appendix</a>
+  <ul class="collapse">
+  <li><a href="#data-sources" id="toc-data-sources" class="nav-link" data-scroll-target="#data-sources">Data Sources</a></li>
+  <li><a href="#model-specifications" id="toc-model-specifications" class="nav-link" data-scroll-target="#model-specifications">Model Specifications</a></li>
+  <li><a href="#software" id="toc-software" class="nav-link" data-scroll-target="#software">Software</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Predicting the Unpredictable: A Statistical Exploration of Super Bowl LX</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">NFL</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    The most watched annual sporting event also generates a lot of interesting numbers. Can we predict the result?
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Alun Rees-Lindley </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">Feb 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>On February 8th, 2026, the Seattle Seahawks and New England Patriots will face off in Super Bowl LX in New Orleans. This is the final showdown at the end of 32 teams battling it out across 17 weeks, and a gruelling playoffs where the most successful teams battle each other in a three-round, post-season elimination battle.</p>
+<p>The two finalists were determined at the end of the NFC (National Football Conference) and AFC (American Football Conference) championship games, on Sunday 25th of January. The next 2 weeks to the final will lead to much speculation, but one question dominates the conversation: <strong>who will win?</strong> The conventional wisdom suggests that the teams in each conference are evenly matched, and this game will be decided on a coin-flip. Most expert panels are favouring Seattle to lift the Lombardi trophy. But what happens when we let the data speak for itself?</p>
+<p>Using two distinct statistical approaches; a FiveThirtyEight-style Elo rating system, and a historical simulation model, I’ve analyzed the entire 2025 NFL season to predict not just the winner, but the final score, the likely performance metrics, and the underlying uncertainty in one of sport’s most-watched single games.</p>
+<p>The verdict? <strong>This is not a coin flip.</strong> The models agree: Seattle has a clear advantage, with a ~60% win probability. But more interesting than the prediction itself is the journey to get there, and what it reveals about the limits of statistical forecasting in sports.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Prediction Accountability
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>These predictions were locked and published on February 7, 2026, before the game. All code and data are available on <a href="https://github.com/areeslindley/nfl-elo-model/tree/main">GitHub</a>. This wasn’t written with the benefit of hindsight—it’s a genuine test of whether statistical models can outperform conventional wisdom.</p>
+</div>
+</div>
+</section>
+<section id="why-these-two-teams" class="level2">
+<h2 class="anchored" data-anchor-id="why-these-two-teams">Why These Two Teams?</h2>
+<p>Before diving into statistics and prediction models, it’s worth stating that both Seattle and New England genuinely earned their way here. The design of the NFL schedule mean that teams play a broad cross-section of the league, and that no matter what injuries occur, what the weather on match-day is or any other bad luck that the teams might encounter, over the course of a season then things should balance out. Some fans have argued that the Denver Broncos losing their key playmaker, Quarterback Bo Nix, in the game before the AFC Championship has given the Patriots an easier journey to the Superbowl. However, the fact that these teams have reached the final is not a statistical fluke — they have been the two best teams in football throughout the 2025 season.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"yards-comparison.png"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-performance" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="yards-comparison.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Offensive vs Defensive Performance - 2025 Season
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-performance" class="quarto-xref">Figure&nbsp;1</a> shows where Seattle and New England sit relative to the entire league. Both teams occupy the upper-right, elite quadrant: high offensive output combined with iron-tight defense.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"performance-dashboard.png"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-season-rankings" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-season-rankings-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="performance-dashboard.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-season-rankings-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Performance Rankings - Top 10 Teams for different game elements Through 2025 Season
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-season-rankings" class="quarto-xref">Figure&nbsp;2</a> shows that both teams ranked highly in each aspect of performance, with both teams having a top 3 points scored per game of the regular season, and top 3 average points differential. Seattle ranked 1st in defense, having only allowed an average of 17.1 per game, and also the 3rd best offense, having averaged 29.2 points per game, giving them the league’s best point differential at +12.1. New England posted top-4 marks in both categories, with a +8.8 differential. These impressive statistics qualify both teams for the 1st and 2nd position for combined rankings.</p>
+<p>This isn’t just about making the playoffs — it’s about sustained excellence across 17 regular season games and two/three playoff victories.</p>
+</section>
+<section id="the-models" class="level2">
+<h2 class="anchored" data-anchor-id="the-models">The Models</h2>
+<p>I employed two fundamentally different approaches to prediction, each with distinct strengths and weaknesses.</p>
+<section id="elo-rating-system" class="level3">
+<h3 class="anchored" data-anchor-id="elo-rating-system">1. Elo Rating System</h3>
+<p>The Elo model, adapted from FiveThirtyEight’s NFL methodology, treats team strength as a dynamic quantity that evolves game-by-game throughout the season.</p>
+<p><strong>Core principles:</strong></p>
+<ul>
+<li>Each team starts with a rating (1505 at the beginning of 2015)</li>
+<li>Ratings increase after wins, decrease after losses</li>
+<li>The magnitude of change depends on:
+<ul>
+<li>Margin of victory (blowouts matter more)</li>
+<li>Opponent strength (beating good teams is more impressive)</li>
+<li>Game importance (playoffs weighted more heavily)</li>
+</ul></li>
+<li>Between seasons, ratings regress 1/3 toward the mean</li>
+</ul>
+<p>Although it may seam counter-intuitive that all teams would have the same ranking at the beginning of the 2015 season, the beauty of the Elo model is that team rankings will be rewarded/penalised fairly quickly and that they will converge to their actual Elo rankings fairly quickly. There are parameters which determine how much teams get rewarded/penalised per victory/loss, as outlined below.</p>
+<p><strong>Key parameters:</strong></p>
+<ul>
+<li>K-factor (regular season): 20</li>
+<li>K-factor (playoffs): 30</li>
+<li>Home field advantage: 65 Elo points (~2.6 point spread)</li>
+<li>Super Bowl: Neutral site (no home advantage)</li>
+</ul>
+<p>For neutral-site games, Elo win probability follows the standard formula:</p>
+<p><span class="math display">\[P(\text{Team A wins}) = \frac{1}{1 + 10^{(\text{Elo}_B - \text{Elo}_A)/400}}\]</span></p>
+<p>After each game, Elo ratings are updated based on the result:</p>
+<p><span class="math display">\[\Delta\text{Elo} = K \times \ln(|\text{game margin}| + 1) \times (1 - E)\]</span></p>
+<p>where: - <span class="math inline">\(K\)</span> is the K-factor (20 for regular season, 30 for playoffs) - <span class="math inline">\(\text{game margin}\)</span> is the point difference (winner’s score - loser’s score) - <span class="math inline">\(E\)</span> is the expected win probability of the victorious team before the game - <span class="math inline">\(\ln\)</span> is the natural logarithm</p>
+<p>The winner’s rating increases by <span class="math inline">\(\Delta\text{Elo}\)</span>, and the loser’s rating decreases by the same amount:</p>
+<p><span class="math display">\[\text{Elo}_{\text{new, winner}} = \text{Elo}_{\text{old, winner}} + \Delta\text{Elo}\]</span></p>
+<p><span class="math display">\[\text{Elo}_{\text{new, loser}} = \text{Elo}_{\text{old, loser}} - \Delta\text{Elo}\]</span></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>current_elos <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(team <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"SEA"</span>, <span class="st">"NE"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(elo)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Team =</span> team,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Elo Rating</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(elo, <span class="dv">1</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Win Probability</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">paste0</span>(<span class="fu">round</span>(sb_win_prob <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>), <span class="st">"%"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Team, <span class="st">`</span><span class="at">Elo Rating</span><span class="st">`</span>, <span class="st">`</span><span class="at">Win Probability</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">align =</span> <span class="st">'lcc'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-current-elo" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-current-elo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Current Elo Ratings (as of February 7, 2026)
+</figcaption>
+<div aria-describedby="tbl-current-elo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Team</th>
+<th style="text-align: center;">Elo Rating</th>
+<th style="text-align: center;">Win Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">SEA</td>
+<td style="text-align: center;">1759.5</td>
+<td style="text-align: center;">60.3%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NE</td>
+<td style="text-align: center;">1686.8</td>
+<td style="text-align: center;">39.7%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>As shown in <a href="#tbl-current-elo" class="quarto-xref">Table&nbsp;1</a>, Seattle enters with a 72.7-point Elo advantage. This translates to a <strong>60.3% win probability</strong>—a meaningful edge, but far from a sure thing.</p>
+</section>
+<section id="how-did-we-get-here" class="level3">
+<h3 class="anchored" data-anchor-id="how-did-we-get-here">How Did We Get Here?</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"elo-rankings-by-week.png"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-elo-evolution" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-elo-evolution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="elo-rankings-by-week.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-elo-evolution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Elo Rating Evolution - Top 8 Playoff Teams Through 2025 Season
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-elo-evolution" class="quarto-xref">Figure&nbsp;3</a> reveals the season’s narrative arc for this year’s playoff contenders. Seattle began as a strong contender (Elo ~1500) and steadily improved, peaking at 1759 after the Conference Championship. New England’s journey was more dramatic: they started mediocrely (Elo of ~1375), slumped down again in Week 3, then mounted a remarkable comeback, ultimately reaching 1687. Note that last year’s Superbowl contenders, the Kansas City Chiefs, and the Philadelphia Eagles have also been included in this graph, despite the Chiefs’ not making it to the playoffs this season.</p>
+<p>The playoff period (shaded) shows both teams pulling away from the pack, but Seattle has a clear separation from the rest of the playoff contenders whereas New England has a similar Elo ranking.</p>
+</section>
+<section id="baseline-historical-model" class="level3">
+<h3 class="anchored" data-anchor-id="baseline-historical-model">2. Baseline Historical Model</h3>
+<p>The Elo approach is sophisticated but carries assumptions: teams have consistent “strength,” performance follows predictable patterns, and that a team will live up to historical performances. To provide a sanity check, I built a simpler baseline model to compare the Elo model to.</p>
+<p><strong>Method:</strong></p>
+<ol type="1">
+<li>Collect all Super Bowl scores from 1967-2025 (59 games)</li>
+<li>Extract scoring distributions for winners and losers</li>
+<li>Adjust for each team’s 2025 season performance:
+<ul>
+<li>Points per game differential vs.&nbsp;league average</li>
+<li>Strength of schedule adjustments</li>
+<li>Home/road splits (though Super Bowl is neutral)</li>
+</ul></li>
+<li>Simulate 10,000 possible games using Monte Carlo</li>
+<li>Count outcomes</li>
+</ol>
+<p><strong>Why this approach?</strong> It’s transparent, requires minimal assumptions, and treats both teams “fairly” based purely on observable performance. If the Elo model and baseline model disagree wildly, something is probably wrong.</p>
+<section id="historical-super-bowl-scoring-patterns" class="level4">
+<h4 class="anchored" data-anchor-id="historical-super-bowl-scoring-patterns">Historical Super Bowl Scoring Patterns</h4>
+<p>The baseline model uses scoring distributions from recent Super Bowls (2005-2025) to establish expected scoring patterns:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load Super Bowl history</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>sb_history <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"super_bowl_history.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Focus on recent Super Bowls</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>recent_sbs <span class="ot">&lt;-</span> sb_history <span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(season <span class="sc">&gt;=</span> <span class="dv">2005</span>, <span class="sc">!</span><span class="fu">is.na</span>(away_score), <span class="sc">!</span><span class="fu">is.na</span>(home_score)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">winner_score =</span> <span class="fu">pmax</span>(away_score, home_score),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">loser_score =</span> <span class="fu">pmin</span>(away_score, home_score)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate statistics</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>sb_stats <span class="ot">&lt;-</span> recent_sbs <span class="sc">%&gt;%</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Games</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>(),</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Winner Mean</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">mean</span>(winner_score), <span class="dv">1</span>),</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Winner SD</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">sd</span>(winner_score), <span class="dv">1</span>),</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Loser Mean</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">mean</span>(loser_score), <span class="dv">1</span>),</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Loser SD</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">sd</span>(loser_score), <span class="dv">1</span>),</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Total Mean</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">mean</span>(total_points), <span class="dv">1</span>),</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Total SD</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">sd</span>(total_points), <span class="dv">1</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">Statistic =</span> <span class="st">"Super Bowl Average (2005-2025)"</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Statistic, <span class="st">`</span><span class="at">Games</span><span class="st">`</span>, <span class="st">`</span><span class="at">Winner Mean</span><span class="st">`</span>, <span class="st">`</span><span class="at">Winner SD</span><span class="st">`</span>, <span class="st">`</span><span class="at">Loser Mean</span><span class="st">`</span>, <span class="st">`</span><span class="at">Loser SD</span><span class="st">`</span>, <span class="st">`</span><span class="at">Total Mean</span><span class="st">`</span>, <span class="st">`</span><span class="at">Total SD</span><span class="st">`</span>)</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(sb_stats, <span class="at">align =</span> <span class="st">'lccccccc'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-sb-scoring" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sb-scoring-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Historical Super Bowl Scoring Statistics (2005-2025)
+</figcaption>
+<div aria-describedby="tbl-sb-scoring-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 6%">
+<col style="width: 12%">
+<col style="width: 10%">
+<col style="width: 11%">
+<col style="width: 9%">
+<col style="width: 11%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Statistic</th>
+<th style="text-align: center;">Games</th>
+<th style="text-align: center;">Winner Mean</th>
+<th style="text-align: center;">Winner SD</th>
+<th style="text-align: center;">Loser Mean</th>
+<th style="text-align: center;">Loser SD</th>
+<th style="text-align: center;">Total Mean</th>
+<th style="text-align: center;">Total SD</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Super Bowl Average (2005-2025)</td>
+<td style="text-align: center;">26</td>
+<td style="text-align: center;">28.3</td>
+<td style="text-align: center;">9.6</td>
+<td style="text-align: center;">18.6</td>
+<td style="text-align: center;">8.7</td>
+<td style="text-align: center;">46.9</td>
+<td style="text-align: center;">15.9</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#tbl-sb-scoring" class="quarto-xref">Table&nbsp;2</a> shows that recent Super Bowls average 46.9 total points, with winners averaging 28.3 points and losers averaging 18.6 points. These distributions form the baseline for our simulations.</p>
+</section>
+<section id="season-performance-adjustments" class="level4">
+<h4 class="anchored" data-anchor-id="season-performance-adjustments">2025 Season Performance Adjustments</h4>
+<p>The model adjusts these baseline scores based on each team’s 2025 regular season performance relative to the league average:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load team performance and calculate league average</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>team_perf <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"team_performance_2025.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>schedules <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"schedules_2015_2025.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate 2025 league average</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>league_avg_2025 <span class="ot">&lt;-</span> schedules <span class="sc">%&gt;%</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(season <span class="sc">==</span> <span class="dv">2025</span>, <span class="sc">!</span><span class="fu">is.na</span>(away_score), <span class="sc">!</span><span class="fu">is.na</span>(home_score)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_ppg =</span> <span class="fu">mean</span>(<span class="fu">c</span>(away_score, home_score), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(avg_ppg)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Get Super Bowl teams</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>sb_teams <span class="ot">&lt;-</span> team_perf <span class="sc">%&gt;%</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(team <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"SEA"</span>, <span class="st">"NE"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">Team =</span> team,</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Points Per Game</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(points_per_game, <span class="dv">1</span>),</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Points Allowed Per Game</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(points_allowed_per_game, <span class="dv">1</span>),</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">League Average PPG</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(league_avg_2025, <span class="dv">1</span>),</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Offensive Adjustment</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(points_per_game <span class="sc">-</span> league_avg_2025, <span class="dv">1</span>),</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Defensive Adjustment</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(league_avg_2025 <span class="sc">-</span> points_allowed_per_game, <span class="dv">1</span>),</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Point Differential</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(point_differential, <span class="dv">1</span>)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Team, <span class="st">`</span><span class="at">Points Per Game</span><span class="st">`</span>, <span class="st">`</span><span class="at">Points Allowed Per Game</span><span class="st">`</span>, <span class="st">`</span><span class="at">League Average PPG</span><span class="st">`</span>, </span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Offensive Adjustment</span><span class="st">`</span>, <span class="st">`</span><span class="at">Defensive Adjustment</span><span class="st">`</span>, <span class="st">`</span><span class="at">Point Differential</span><span class="st">`</span>)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(sb_teams, <span class="at">align =</span> <span class="st">'lcccccc'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-team-adjustments" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-team-adjustments-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: 2025 Season Performance Adjustments
+</figcaption>
+<div aria-describedby="tbl-team-adjustments-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 3%">
+<col style="width: 12%">
+<col style="width: 19%">
+<col style="width: 15%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Team</th>
+<th style="text-align: center;">Points Per Game</th>
+<th style="text-align: center;">Points Allowed Per Game</th>
+<th style="text-align: center;">League Average PPG</th>
+<th style="text-align: center;">Offensive Adjustment</th>
+<th style="text-align: center;">Defensive Adjustment</th>
+<th style="text-align: center;">Point Differential</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">NE</td>
+<td style="text-align: center;">28.8</td>
+<td style="text-align: center;">18.8</td>
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">5.8</td>
+<td style="text-align: center;">4.2</td>
+<td style="text-align: center;">10.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SEA</td>
+<td style="text-align: center;">28.4</td>
+<td style="text-align: center;">17.2</td>
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">5.4</td>
+<td style="text-align: center;">5.8</td>
+<td style="text-align: center;">11.2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#tbl-team-adjustments" class="quarto-xref">Table&nbsp;3</a> shows how each team’s 2025 performance compares to the league average of 23 points per game. Seattle’s offense scored 5.4 points above average, while their defense allowed 5.8 points below average. New England’s offense was 5.8 points above average, with their defense allowing 4.2 points below average.</p>
+<p>These adjustments are applied to the historical Super Bowl baseline: each team’s expected score = historical average + offensive adjustment - opponent’s defensive adjustment.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"score-distribution.png"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-score-distribution" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-score-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="score-distribution.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-score-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Predicted Score Distribution - 10,000 Simulated Games
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-score-distribution" class="quarto-xref">Figure&nbsp;4</a> shows the full distribution of predicted final scores. The most likely outcomes cluster around 20-27 points for each team. The diagonal dashed line represents ties (which would proceed to overtime). Notably, about 5.6% of simulations ended in regulation ties—a reminder that close games are not just possible but probable. These ties would proceed to overtime in the actual game; for win probability calculations, we redistribute ties proportionally based on team strength.</p>
+</section>
+</section>
+</section>
+<section id="the-predictions" class="level2">
+<h2 class="anchored" data-anchor-id="the-predictions">The Predictions</h2>
+<section id="win-probability" class="level3">
+<h3 class="anchored" data-anchor-id="win-probability">Win Probability</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>predictions <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Model =</span> model,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">SEA Win %</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">paste0</span>(<span class="fu">round</span>(seahawks_win_prob <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>), <span class="st">"%"</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">NE Win %</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">paste0</span>(<span class="fu">round</span>((<span class="dv">1</span> <span class="sc">-</span> seahawks_win_prob) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>), <span class="st">"%"</span>),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Predicted Score</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">paste0</span>(<span class="st">"SEA "</span>, predicted_sea_score, <span class="st">"-"</span>, predicted_ne_score, <span class="st">" NE"</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Model, <span class="st">`</span><span class="at">SEA Win %</span><span class="st">`</span>, <span class="st">`</span><span class="at">NE Win %</span><span class="st">`</span>, <span class="st">`</span><span class="at">Predicted Score</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">align =</span> <span class="st">'lccc'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-predictions" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-predictions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Model Predictions Comparison
+</figcaption>
+<div aria-describedby="tbl-predictions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: center;">SEA Win %</th>
+<th style="text-align: center;">NE Win %</th>
+<th style="text-align: center;">Predicted Score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Baseline</td>
+<td style="text-align: center;">59.1%</td>
+<td style="text-align: center;">40.9%</td>
+<td style="text-align: center;">SEA 24-22 NE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Elo</td>
+<td style="text-align: center;">60.3%</td>
+<td style="text-align: center;">39.7%</td>
+<td style="text-align: center;">SEA 25-23 NE</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>As shown in <a href="#tbl-predictions" class="quarto-xref">Table&nbsp;4</a>, both models converge on a similar conclusion:</p>
+<ul>
+<li><strong>Elo Model:</strong> Seattle 60.3%, New England 39.7%</li>
+<li><strong>Baseline Model:</strong> Seattle 59.1%, New England 35.2% (with 5.6% ties)</li>
+</ul>
+<p>This agreement is striking: an Elo-based system and a historical simulation—methodologies with entirely different assumptions—reach nearly identical conclusions. When independent approaches converge, our confidence in their predictions increases.</p>
+</section>
+<section id="expected-score-and-performance" class="level3">
+<h3 class="anchored" data-anchor-id="expected-score-and-performance">Expected Score and Performance</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>detailed_pred <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">align =</span> <span class="st">'lcccccc'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-detailed-predictions" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-detailed-predictions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: Detailed Performance Predictions
+</figcaption>
+<div aria-describedby="tbl-detailed-predictions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 15%">
+<col style="width: 14%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Team</th>
+<th style="text-align: center;">Pass Yards</th>
+<th style="text-align: center;">Rush Yards</th>
+<th style="text-align: center;">Total Yards</th>
+<th style="text-align: center;">Touchdowns</th>
+<th style="text-align: center;">First Downs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Seattle Seahawks</td>
+<td style="text-align: center;">265</td>
+<td style="text-align: center;">125</td>
+<td style="text-align: center;">390</td>
+<td style="text-align: center;">2.9</td>
+<td style="text-align: center;">22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">New England Patriots</td>
+<td style="text-align: center;">245</td>
+<td style="text-align: center;">110</td>
+<td style="text-align: center;">355</td>
+<td style="text-align: center;">2.7</td>
+<td style="text-align: center;">20</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#tbl-detailed-predictions" class="quarto-xref">Table&nbsp;5</a> breaks down the expected offensive output. Both teams project to move the ball effectively, with Seattle’s slight edge in both passing and rushing yards. The predicted touchdown totals (2.9 for SEA, 2.7 for NE) suggest 3-4 touchdowns per team, with the remainder coming from field goals.</p>
+<p><strong>Key insights:</strong></p>
+<ul>
+<li>Seattle’s balanced attack: 265 pass yards, 125 rush yards</li>
+<li>New England’s pass-heavy approach: 245 pass yards, 110 rush yards<br>
+</li>
+<li>Total offensive yards: Seattle 390, New England 355</li>
+<li>Both teams expected to score 3-4 touchdowns</li>
+</ul>
+</section>
+<section id="how-predicted-scores-are-calculated" class="level3">
+<h3 class="anchored" data-anchor-id="how-predicted-scores-are-calculated">How Predicted Scores Are Calculated</h3>
+<p>The two models use different approaches to convert team ratings into expected final scores:</p>
+<p><strong>Elo Model Score Prediction:</strong></p>
+<p>The Elo model converts Elo rating differences into expected scores using historical Super Bowl patterns:</p>
+<p><span class="math display">\[\text{Base Total} = \text{Mean total points from Super Bowls since 2010}\]</span></p>
+<p><span class="math display">\[\text{Elo Impact} = (\text{SEA Elo} - \text{NE Elo}) \times 0.01\]</span></p>
+<p><span class="math display">\[\text{SEA Expected Score} = \frac{\text{Base Total}}{2} + \text{Elo Impact}\]</span></p>
+<p><span class="math display">\[\text{NE Expected Score} = \frac{\text{Base Total}}{2} - \text{Elo Impact}\]</span></p>
+<p><strong>Free Parameters:</strong> - <code>0.01</code>: Elo-to-points conversion factor (1 Elo point ≈ 0.01 game points). This could be tuned by regressing historical Elo differences against actual score differences. - <code>season &gt;= 2010</code>: Which Super Bowls to include in baseline. More recent games may better reflect modern scoring patterns. - Score bounds: <code>max(10, min(40, score))</code> - reasonable limits to prevent unrealistic predictions.</p>
+<p><strong>Baseline Model Score Prediction:</strong></p>
+<p>The baseline model uses team performance relative to league average:</p>
+<p><span class="math display">\[\text{Base Score} = \frac{\text{Mean Away Score} + \text{Mean Home Score}}{2} \text{ (from Super Bowls since 2005)}\]</span></p>
+<p><span class="math display">\[\text{SEA Offense Adjustment} = \text{SEA Points For} - \text{League Average Points For}\]</span></p>
+<p><span class="math display">\[\text{NE Defense Adjustment} = \text{League Average Points For} - \text{NE Points Against}\]</span></p>
+<p><span class="math display">\[\text{SEA Expected Score} = \text{Base Score} + \text{SEA Offense Adjustment} - \text{NE Defense Adjustment}\]</span></p>
+<p><span class="math display">\[\text{NE Expected Score} = \text{Base Score} + \text{NE Offense Adjustment} - \text{SEA Defense Adjustment}\]</span></p>
+<p>The model then simulates 10,000 games using Poisson distributions with these expected scores as the mean (λ).</p>
+<p><strong>Free Parameters:</strong> - <code>season &gt;= 2005</code>: Which Super Bowls to include in baseline. Could be adjusted to focus on more recent games. - Score bounds: <code>max(10, min(45, score))</code> - reasonable limits for simulations. - <code>n_sims = 10000</code>: Number of simulations. More simulations = more stable results but slower computation.</p>
+<p><strong>Parameter Sensitivity Considerations:</strong></p>
+<p>These parameters could be tuned to improve predictions: - <strong>Elo conversion factor (0.01)</strong>: Could be estimated from historical data by regressing Elo differences against actual score differences in Super Bowls. - <strong>Historical window</strong>: Using only recent Super Bowls (e.g., 2015+) might better reflect modern scoring patterns, but reduces sample size. - <strong>Score bounds</strong>: Current bounds are somewhat arbitrary. Could be based on historical extremes (lowest/highest Super Bowl scores). - <strong>Simulation count</strong>: 10,000 is a reasonable balance, but increasing to 100,000 would provide more stable percentiles at the cost of computation time.</p>
+</section>
+<section id="how-this-compares-to-vegas" class="level3">
+<h3 class="anchored" data-anchor-id="how-this-compares-to-vegas">How This Compares to Vegas</h3>
+<p>As of February 7, 2026, the betting market shows:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load historical betting odds from CSV file</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Real odds from 6 major bookmakers: DraftKings, BetMGM, Caesars, FanDuel, Circa Sports, Hard Rock Bet</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Sources: USA Today and other betting news sources (Feb 8, 2026)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>betting_odds <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"betting_odds.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(betting_odds, <span class="at">align =</span> <span class="st">'lcccccc'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-betting-odds" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-betting-odds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6: Super Bowl LX Betting Odds - Major Sportsbooks (as of February 7, 2026)
+</figcaption>
+<div aria-describedby="tbl-betting-odds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 14%">
+<col style="width: 16%">
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Bookmaker</th>
+<th style="text-align: center;">Spread (SEA)</th>
+<th style="text-align: center;">Spread Odds</th>
+<th style="text-align: center;">SEA Moneyline</th>
+<th style="text-align: center;">NE Moneyline</th>
+<th style="text-align: center;">Over/Under</th>
+<th style="text-align: center;">O/U Odds</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">DraftKings</td>
+<td style="text-align: center;">-4.5</td>
+<td style="text-align: center;">-110</td>
+<td style="text-align: center;">-230</td>
+<td style="text-align: center;">190</td>
+<td style="text-align: center;">45.5</td>
+<td style="text-align: center;">-110</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BetMGM</td>
+<td style="text-align: center;">-4.5</td>
+<td style="text-align: center;">-110</td>
+<td style="text-align: center;">-238</td>
+<td style="text-align: center;">198</td>
+<td style="text-align: center;">45.5</td>
+<td style="text-align: center;">-110</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Caesars</td>
+<td style="text-align: center;">-4.5</td>
+<td style="text-align: center;">-110</td>
+<td style="text-align: center;">-220</td>
+<td style="text-align: center;">200</td>
+<td style="text-align: center;">45.5</td>
+<td style="text-align: center;">-110</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FanDuel</td>
+<td style="text-align: center;">-4.5</td>
+<td style="text-align: center;">-110</td>
+<td style="text-align: center;">-238</td>
+<td style="text-align: center;">198</td>
+<td style="text-align: center;">45.5</td>
+<td style="text-align: center;">-110</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Circa Sports</td>
+<td style="text-align: center;">-4.5</td>
+<td style="text-align: center;">-110</td>
+<td style="text-align: center;">-220</td>
+<td style="text-align: center;">190</td>
+<td style="text-align: center;">45.0</td>
+<td style="text-align: center;">-110</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hard Rock Bet</td>
+<td style="text-align: center;">-4.5</td>
+<td style="text-align: center;">-110</td>
+<td style="text-align: center;">-230</td>
+<td style="text-align: center;">190</td>
+<td style="text-align: center;">45.5</td>
+<td style="text-align: center;">-110</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Average</td>
+<td style="text-align: center;">-4.5</td>
+<td style="text-align: center;">-110</td>
+<td style="text-align: center;">-229</td>
+<td style="text-align: center;">194</td>
+<td style="text-align: center;">45.4</td>
+<td style="text-align: center;">-110</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#tbl-betting-odds" class="quarto-xref">Table&nbsp;6</a> shows the consensus betting market as of February 7, 2026, across six major sportsbooks. The market had Seattle as a significant favorite, with all books offering Seattle -4.5 points (meaning Seattle needed to win by 5 or more to cover). The average moneyline odds of -229 for Seattle indicate the market gave them approximately a 69.6% chance of winning. The total points line averaged 45.4, suggesting a lower-scoring game than typical Super Bowls.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Betting Odds Data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The odds displayed above are historical pre-game odds from six major sportsbooks: DraftKings, BetMGM, Caesars, FanDuel, Circa Sports, and Hard Rock Bet. Sources include <a href="https://eu.usatoday.com/story/sports/nfl/super-bowl/2026/02/08/2026-super-bowl-spread-odds-patriots-seahawks/88525099007/">USA Today</a> and other betting news sources from February 8, 2026.</p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate model predictions</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>model_avg_win_prob <span class="ot">&lt;-</span> <span class="fu">mean</span>(predictions<span class="sc">$</span>seahawks_win_prob)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>model_avg_sea_score <span class="ot">&lt;-</span> <span class="fu">mean</span>(predictions<span class="sc">$</span>predicted_sea_score)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>model_avg_ne_score <span class="ot">&lt;-</span> <span class="fu">mean</span>(predictions<span class="sc">$</span>predicted_ne_score)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>model_avg_total <span class="ot">&lt;-</span> model_avg_sea_score <span class="sc">+</span> model_avg_ne_score</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>model_spread <span class="ot">&lt;-</span> model_avg_sea_score <span class="sc">-</span> model_avg_ne_score</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Vegas consensus (from betting odds table above)</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate averages from the betting odds table</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">"betting_odds"</span>) <span class="sc">&amp;&amp;</span> <span class="fu">nrow</span>(betting_odds) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extract numeric values from odds table (excluding "Average" row if present)</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  odds_numeric <span class="ot">&lt;-</span> betting_odds <span class="sc">%&gt;%</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(Bookmaker <span class="sc">!=</span> <span class="st">"Average"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">spread_num =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"[^0-9.-]"</span>, <span class="st">""</span>, <span class="st">`</span><span class="at">Spread (SEA)</span><span class="st">`</span>)),</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">total_num =</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">Over/Under</span><span class="st">`</span>),</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">sea_ml_num =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"[^0-9.-]"</span>, <span class="st">""</span>, <span class="st">`</span><span class="at">SEA Moneyline</span><span class="st">`</span>))</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  vegas_spread <span class="ot">&lt;-</span> <span class="fu">mean</span>(odds_numeric<span class="sc">$</span>spread_num, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  vegas_total <span class="ot">&lt;-</span> <span class="fu">mean</span>(odds_numeric<span class="sc">$</span>total_num, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  vegas_sea_ml <span class="ot">&lt;-</span> <span class="fu">mean</span>(odds_numeric<span class="sc">$</span>sea_ml_num, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert moneyline to win probability</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># For negative odds: prob = |odds| / (|odds| + 100)</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  <span class="co"># For positive odds: prob = 100 / (odds + 100)</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (vegas_sea_ml <span class="sc">&lt;</span> <span class="dv">0</span>) {</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>    vegas_sea_win_prob <span class="ot">&lt;-</span> <span class="fu">abs</span>(vegas_sea_ml) <span class="sc">/</span> (<span class="fu">abs</span>(vegas_sea_ml) <span class="sc">+</span> <span class="dv">100</span>)</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>    vegas_sea_win_prob <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">/</span> (vegas_sea_ml <span class="sc">+</span> <span class="dv">100</span>)</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Fallback values if odds table not available</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>  vegas_spread <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">1.5</span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>  vegas_total <span class="ot">&lt;-</span> <span class="fl">47.5</span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>  vegas_sea_ml <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">120</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>  vegas_sea_win_prob <span class="ot">&lt;-</span> <span class="dv">120</span> <span class="sc">/</span> (<span class="dv">120</span> <span class="sc">+</span> <span class="dv">100</span>)</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>comparison <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Metric</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Spread (SEA)"</span>, <span class="st">"Total Points"</span>, <span class="st">"SEA Win Probability"</span>),</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Betting Market</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"SEA "</span>, vegas_spread),</span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="fu">round</span>(vegas_total, <span class="dv">1</span>)),</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="fu">round</span>(vegas_sea_win_prob <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>), <span class="st">"%"</span>)</span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Elo Model</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"SEA -"</span>, <span class="fu">round</span>(model_spread, <span class="dv">1</span>)),</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="fu">round</span>(model_avg_sea_score <span class="sc">+</span> model_avg_ne_score, <span class="dv">1</span>)),</span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="fu">round</span>(predictions<span class="sc">$</span>seahawks_win_prob[predictions<span class="sc">$</span>model <span class="sc">==</span> <span class="st">"Elo"</span>] <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>), <span class="st">"%"</span>)</span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Baseline Model</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"SEA -"</span>, <span class="fu">round</span>(model_spread, <span class="dv">1</span>)),</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="fu">round</span>(model_avg_sea_score <span class="sc">+</span> model_avg_ne_score, <span class="dv">1</span>)),</span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="fu">round</span>(predictions<span class="sc">$</span>seahawks_win_prob[predictions<span class="sc">$</span>model <span class="sc">==</span> <span class="st">"Baseline"</span>] <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>), <span class="st">"%"</span>)</span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Model Average</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"SEA -"</span>, <span class="fu">round</span>(model_spread, <span class="dv">1</span>)),</span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="fu">round</span>(model_avg_total, <span class="dv">1</span>)),</span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="fu">round</span>(model_avg_win_prob <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>), <span class="st">"%"</span>)</span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(comparison, <span class="at">align =</span> <span class="st">'lcccc'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-model-vs-vegas" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-model-vs-vegas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7: Model Predictions vs.&nbsp;Betting Market
+</figcaption>
+<div aria-describedby="tbl-model-vs-vegas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 20%">
+<col style="width: 14%">
+<col style="width: 20%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Metric</th>
+<th style="text-align: center;">Betting Market</th>
+<th style="text-align: center;">Elo Model</th>
+<th style="text-align: center;">Baseline Model</th>
+<th style="text-align: center;">Model Average</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Spread (SEA)</td>
+<td style="text-align: center;">SEA -4.5</td>
+<td style="text-align: center;">SEA -2</td>
+<td style="text-align: center;">SEA -2</td>
+<td style="text-align: center;">SEA -2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Total Points</td>
+<td style="text-align: center;">45.4</td>
+<td style="text-align: center;">47</td>
+<td style="text-align: center;">47</td>
+<td style="text-align: center;">47</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SEA Win Probability</td>
+<td style="text-align: center;">69.6%</td>
+<td style="text-align: center;">60.3%</td>
+<td style="text-align: center;">59.1%</td>
+<td style="text-align: center;">59.7%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#tbl-model-vs-vegas" class="quarto-xref">Table&nbsp;7</a> compares our model predictions to the betting market. The models align reasonably well with the betting market on total points (model average: 47 vs.&nbsp;market: 45.4166667), but the bookmakers show a more pronounced Seattle advantage. The betting market implies Seattle has approximately 69.6% win probability, while our models suggest 59.7%—a meaningful difference of about -9.9 percentage points. Both of our models agree on the same outcome as the betting markets, but the margin of that victory is different - there are a number of reasons why this discrepancy might exist, as dicussed in the following section.</p>
+<p><strong>Why the difference?</strong> Betting markets incorporate not just predictive power, but also betting patterns, public perception, and bookmaker risk management. Statistical models, by contrast, are purely about probability. The market may be accounting for factors like: - Public betting bias (favorite teams often get more action) - Sharp money vs.&nbsp;public money - Bookmaker risk management (lines move to balance action) - Intangible factors (coaching, playoff experience, “clutch” reputation)</p>
+<p><strong>Who’s right?</strong> The only way we can find out is after the game on Sunday. But it’s worth noting that both approaches have merit: the betting market reflects the collective wisdom of thousands of bettors and professional oddsmakers, while statistical models provide a data-driven baseline free from market psychology, individual bias and herd mentality. Bookmakers are famously good at calculating these odds - if they weren’t, they wouldn’t exist!</p>
+</section>
+</section>
+<section id="what-the-models-cant-know" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-models-cant-know">What The Models Can’t Know</h2>
+<p>Before declaring statistical supremacy, let’s be honest about the limitations. These predictions rely on season-long performance patterns, but they cannot account for:</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Model Blind Spots
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>In-game factors:</strong></p>
+<ul>
+<li>Key injuries (e.g., starting QB injured in 2nd quarter)</li>
+<li>Coaching adjustments at halftime</li>
+<li>Weather conditions (wind, rain, and/or snow affecting passing and running ability)</li>
+<li>Referee decisions and controversial calls</li>
+<li>Turnover luck and timing</li>
+<li>Special teams breakdowns</li>
+</ul>
+<p><strong>Intangibles:</strong></p>
+<ul>
+<li>Individual “clutch” performances by star players</li>
+<li>Momentum swings and psychological factors</li>
+<li>Playoff experience and pressure</li>
+<li>Motivation (“wanting it more”)</li>
+<li>Pure randomness (fumble bounces, tipped interceptions)</li>
+</ul>
+</div>
+</div>
+<p>These are not weaknesses to be embarrassed about — it’s an honest acknowledgment of what statistical models can and cannot do. Sports wouldn’t be worth watching if they were perfectly predictable.</p>
+</section>
+<section id="interpreting-probabilistic-predictions" class="level2">
+<h2 class="anchored" data-anchor-id="interpreting-probabilistic-predictions">Interpreting Probabilistic Predictions</h2>
+<p>A 60% win probability is <strong>not</strong> a confident prediction for the Super Bowl outcome. Let me put this in perspective:</p>
+<p>If we could somehow replay this exact Super Bowl matchup 100 times (same teams, same preparation, same conditions), Seattle would win about 60 times and New England about 40 times. That means:</p>
+<ul>
+<li><strong>2 out of every 5 times, New England wins.</strong> This is far from impossible.</li>
+<li>If New England wins on Sunday, it doesn’t mean the model was “wrong”—it means we observed one of the 40% outcomes.</li>
+<li>Conversely, if Seattle wins, it doesn’t definitively validate the model.</li>
+</ul>
+</section>
+<section id="why-this-prediction-is-interesting" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-prediction-is-interesting">Why This Prediction Is Interesting</h2>
+<p>You might wonder: why bother with statistical models when bookmakers already have Seattle as a significant favorite? The betting market shows Seattle -4.5 with approximately 70% win probability—why do we need models that suggest a more modest 60% advantage?</p>
+<p>Here’s what makes this analysis valuable:</p>
+<section id="going-against-the-bookies" class="level3">
+<h3 class="anchored" data-anchor-id="going-against-the-bookies">1. Going against the bookies’</h3>
+<p>The betting market reflects not just predictive power, but also public sentiment, betting patterns, and bookmaker risk management. When thousands of bettors pile onto the favorite, lines can move beyond pure probability, in order for bookmakers to cover themselves in the event of the favourites winning. Our statistical models, by contrast, are purely data-driven — they don’t care about narratives, “gut feelings,” or herd mentality. <strong>The fact that both approaches agree on the outcome (Seattle wins) but differ on the margin is itself informative.</strong> It suggests the market may be incorporating factors beyond statistical probability—whether those factors are valuable insights or market inefficiencies, Sunday will reveal.</p>
+</section>
+<section id="quantifying-uncertainty-honestly" class="level3">
+<h3 class="anchored" data-anchor-id="quantifying-uncertainty-honestly">2. Quantifying uncertainty honestly</h3>
+<p>The bookmakers’ 70% win probability suggests a confident prediction. Our models’ 60% suggests more caution. Rather than declaring “Seattle will dominate,” we’re saying “Seattle has a meaningful but not overwhelming advantage.” This is more honest about the inherent randomness in a single game. <strong>If Seattle wins by 16 points, the bookmakers were right about the margin. If it’s a close game, the models’ caution may prove more accurate.</strong> Either way, we learn something.</p>
+</section>
+<section id="testing-statistical-methods" class="level3">
+<h3 class="anchored" data-anchor-id="testing-statistical-methods">3. Testing statistical methods</h3>
+<p>By locking in predictions before the game, this becomes a controlled experiment. If the bookmakers’ more emphatic prediction proves correct, it suggests factors like:</p>
+<ul>
+<li>Playoff experience and “clutch” performance</li>
+<li>Coaching matchups and game-planning</li>
+<li>Intangible team chemistry and momentum</li>
+<li>Public betting patterns that reflect insider knowledge</li>
+</ul>
+<p><strong>If the models’ more cautious prediction proves closer, it suggests that statistical fundamentals (Elo ratings, season performance) are sufficient, and market psychology may be overconfident.</strong> Either outcome provides valuable data for improving future models.</p>
+</section>
+<section id="appreciating-unpredictability" class="level3">
+<h3 class="anchored" data-anchor-id="appreciating-unpredictability">4. Appreciating unpredictability</h3>
+<p>The 10 percentage point difference between market (70%) and models (60%) isn’t a bug—it’s a feature. <strong>If the models are wrong, we’ll have concrete evidence of what variables to include in future iterations.</strong> Perhaps we need to:</p>
+<ul>
+<li>Weight recent playoff performance more heavily</li>
+<li>Account for individual performances and coaching experience</li>
+<li>Incorporate factors the market sees but our models can’t capture</li>
+</ul>
+<p><strong>This is how statistical models improve: by making predictions, testing them, and learning from the gaps.</strong></p>
+</section>
+</section>
+<section id="what-happens-if-im-wrong" class="level2">
+<h2 class="anchored" data-anchor-id="what-happens-if-im-wrong">What Happens if I’m wrong?</h2>
+<p>Learning from Every Outcome:</p>
+<ul>
+<li>If Seattle wins by 1-7 points: Models were well-calibrated</li>
+<li>If Seattle wins by 10+: Models underestimated their dominance</li>
+<li>If New England wins close: This was in the 40% probability window</li>
+<li>If New England dominates: Models missed something fundamental about playoff football</li>
+</ul>
+</section>
+<section id="conclusion-the-honest-statisticians-role" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion-the-honest-statisticians-role">Conclusion: The Honest Statistician’s Role</h2>
+<p>NFL teams, sports broadcasters and bookmakers have access to proprietary data, advanced metrics, and decades of institutional knowledge. Yet games remain stubbornly unpredictable. This is a good thing.</p>
+<p>If sports were perfectly predictable, there would be no point in watching them. The reason we tune in isn’t to see the inevitable unfold — it’s to witness the uncertainty, the improbable, and occasional shock results. This is what makes sport exciting.</p>
+<p>The statistician’s role isn’t to spoil the magic by eliminating uncertainty, it’s to:</p>
+<ol type="1">
+<li><strong>Quantify uncertainty honestly</strong> (60-40, not 100-0)</li>
+<li><strong>Test models rigorously</strong> (with pre-game predictions)</li>
+<li><strong>Learn from outcomes</strong> (what did we miss?)</li>
+<li><strong>Appreciate randomness</strong> (that’s what makes sports entertaining)</li>
+</ol>
+<p>So here’s my final prediction, locked in before kickoff:</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Official Prediction (Locked: February 7, 2026, 6:00 PM GMT)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Winner:</strong> Seattle Seahawks (60.3% probability)</p>
+<p><strong>Predicted Score:</strong> SEA 24.9, NE 23.4</p>
+<p><strong>Confidence Level:</strong> Low (leaning to a Seattle win)</p>
+<p><strong>Most Important Prediction:</strong> Whoever wins, it will be because of execution, adjustments, and the chaos of 60+ minutes of American football.</p>
+</div>
+</div>
+<p>See you on the other side of the Super Bowl! Go Hawks - or go Pats! The uncertainty of Sunday is what makes the game, and sports in general, so beautiful.</p>
+<hr>
+</section>
+<section id="technical-appendix" class="level2">
+<h2 class="anchored" data-anchor-id="technical-appendix">Technical Appendix</h2>
+<p>For those interested in implementation details:</p>
+<section id="data-sources" class="level3">
+<h3 class="anchored" data-anchor-id="data-sources">Data Sources</h3>
+<p>All data from <a href="https://nflverse.nflverse.com/">nflverse</a>: - <code>nflreadr::load_schedules()</code> for game results (2015-2025) - <code>nflfastR::load_pbp()</code> for play-by-play data (2025 season) - Full reproducible code on <a href="https://github.com/areeslindley/nfl-elo-model/tree/main">GitHub</a></p>
+<p><strong>Elo Model Inspiration:</strong></p>
+<p>This Elo implementation is inspired by <a href="https://fivethirtyeight.com/features/how-we-calculate-nfl-elo-ratings/">FiveThirtyEight’s NFL Elo model</a>, which used similar principles of rating teams based on game outcomes and margin of victory. Sadly, this website and its Elo model have been taken down and are now owned by ABC news - this is why the website is archived and will be redirected to ABC’s home page. While our implementation uses slightly different parameters (K-factor, home advantage, regression), the core methodology follows the same Elo rating system that has been successfully applied to NFL predictions for over a decade.</p>
+</section>
+<section id="model-specifications" class="level3">
+<h3 class="anchored" data-anchor-id="model-specifications">Model Specifications</h3>
+<p><strong>Elo Implementation:</strong></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Elo update function</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>update_elo <span class="ot">&lt;-</span> <span class="cf">function</span>(winner_elo, loser_elo, margin, <span class="at">k =</span> <span class="dv">20</span>, <span class="at">home_advantage =</span> <span class="dv">65</span>) {</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Expected win probability</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  expected_win <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="dv">10</span><span class="sc">^</span>((loser_elo <span class="sc">-</span> winner_elo <span class="sc">-</span> home_advantage)<span class="sc">/</span><span class="dv">400</span>))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Margin of victory multiplier</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  mov_multiplier <span class="ot">&lt;-</span> <span class="fu">log</span>(<span class="fu">abs</span>(margin) <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate Elo change</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  elo_change <span class="ot">&lt;-</span> k <span class="sc">*</span> mov_multiplier <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> expected_win)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  winner_new <span class="ot">&lt;-</span> winner_elo <span class="sc">+</span> elo_change</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  loser_new <span class="ot">&lt;-</span> loser_elo <span class="sc">-</span> elo_change</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">winner =</span> winner_new, <span class="at">loser =</span> loser_new))</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p><strong>Score Prediction Equations:</strong></p>
+<p>Both models predict final scores using different approaches:</p>
+<p><strong>1. Elo Model Score Prediction:</strong></p>
+<p>The Elo model converts Elo ratings into expected scores using historical Super Bowl scoring patterns:</p>
+<p><span class="math display">\[\text{Base Total} = \text{Mean total points from Super Bowls since 2010}\]</span></p>
+<p><span class="math display">\[\text{Elo Impact} = (\text{SEA Elo} - \text{NE Elo}) \times 0.01\]</span></p>
+<p><span class="math display">\[\text{SEA Expected Score} = \frac{\text{Base Total}}{2} + \text{Elo Impact}\]</span></p>
+<p><span class="math display">\[\text{NE Expected Score} = \frac{\text{Base Total}}{2} - \text{Elo Impact}\]</span></p>
+<p><strong>Free Parameters:</strong> - <code>0.01</code>: Elo-to-points conversion factor (1 Elo point ≈ 0.01 game points). This could be tuned based on historical data. - <code>season &gt;= 2010</code>: Which Super Bowls to include in baseline calculation. More recent games may be more relevant. - Score bounds: <code>max(10, min(40, score))</code> - reasonable limits to prevent unrealistic predictions.</p>
+<p><strong>2. Baseline Model Score Prediction:</strong></p>
+<p>The baseline model uses team performance relative to league average:</p>
+<p><span class="math display">\[\text{Base Score} = \frac{\text{Mean Away Score} + \text{Mean Home Score}}{2} \text{ (from Super Bowls since 2005)}\]</span></p>
+<p><span class="math display">\[\text{SEA Offense Adjustment} = \text{SEA Points For} - \text{League Average Points For}\]</span></p>
+<p><span class="math display">\[\text{NE Defense Adjustment} = \text{League Average Points For} - \text{NE Points Against}\]</span></p>
+<p><span class="math display">\[\text{SEA Expected Score} = \text{Base Score} + \text{SEA Offense Adjustment} - \text{NE Defense Adjustment}\]</span></p>
+<p><span class="math display">\[\text{NE Expected Score} = \text{Base Score} + \text{NE Offense Adjustment} - \text{SEA Defense Adjustment}\]</span></p>
+<p>The model then simulates 10,000 games using Poisson distributions with these expected scores as the mean (λ).</p>
+<p><strong>Free Parameters:</strong> - <code>season &gt;= 2005</code>: Which Super Bowls to include in baseline. Could be adjusted to focus on more recent games. - Score bounds: <code>max(10, min(45, score))</code> - reasonable limits for simulations. - <code>n_sims = 10000</code>: Number of simulations. More simulations = more stable results but slower computation.</p>
+<p><strong>Parameter Sensitivity:</strong></p>
+<p>These parameters could be tuned to improve predictions:</p>
+<ul>
+<li><strong>Elo conversion factor (0.01)</strong>: Could be estimated from historical data by regressing Elo differences against actual score differences.</li>
+<li><strong>Historical window</strong>: Using only recent Super Bowls (e.g., 2015+) might better reflect modern scoring patterns.</li>
+<li><strong>Score bounds</strong>: Current bounds (10-40 for Elo, 10-45 for Baseline) are somewhat arbitrary and could be based on historical extremes.</li>
+</ul>
+</section>
+<section id="software" class="level3">
+<h3 class="anchored" data-anchor-id="software">Software</h3>
+<ul>
+<li>R 4.4.0</li>
+<li>tidyverse 2.0.0</li>
+<li>nflfastR 4.6.1</li>
+<li>nflplotR 1.3.1</li>
+<li>Quarto 1.4.553</li>
+</ul>
+<hr>
+<p><strong>Contact:</strong></p>
+<ul>
+<li>Email: alun.rees-lindley@outlook.com</li>
+<li>GitHub: [github.com/areeslindley]</li>
+</ul>
+<p><strong>Acknowledgments:</strong> This analysis builds on FiveThirtyEight’s excellent NFL Elo methodology and the incredible work of the nflverse community in making NFL data accessible to analysts.</p>
+<hr>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/qsayork\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>2026 · Made with <img src="https://www.r-project.org/Rlogo.png" class="img-fluid" width="20"> and <a href="https://quarto.org/"><img src="https://quarto.org/quarto.png" class="img-fluid" alt="Quarto" width="65"></a></p>
+</div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/qsayork/home">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
