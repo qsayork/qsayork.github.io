@@ -15,6 +15,7 @@
       "/people/hargreaves-jess/index.html",
       "/people/powell-ben/index.html",
       "/people/broughton-tara/index.html",
+      "/people/richmond-india/index.html",
       "/people/rees_lindley-alun/index.html",
       "/people/stanley-rob/index.html"
     ]
@@ -22,6 +23,7 @@
   {
     "listing": "/posts/index.html",
     "items": [
+      "/posts/RSScomp2026/index.html",
       "/posts/superbowl/Superbowl-pregame-analysis.html",
       "/posts/basketball_1/index.html",
       "/posts/the_split/SPLitBlogPost.html"
@@ -74,5 +76,9 @@
     "items": [
       "/posts/superbowl/Superbowl-pregame-analysis.html"
     ]
+  },
+  {
+    "listing": "/people/richmond-india/index.html",
+    "items": []
   }
 ]

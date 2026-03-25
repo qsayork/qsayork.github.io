@@ -1,0 +1,69 @@
+---
+title: &TITLE India Richmond
+last: Richmond
+first: India
+subtitle: "EPSRC PhD Student"
+people_group: "phdstudent"
+email: "you@email.com"
+education:
+  - MSc in Statistics and Computational Finance | University of York <br> BSc Mathematics | University of Edinburgh
+description: "\"Ben Powell is a legend\"- Jess Hargreaves"
+image: picture.jpg
+page-layout: full
+listing:
+  - id: pubs
+    template: ../../_ejs/publications-people.ejs 
+    contents: 
+      - "../../../publications/**/*.qmd"
+      - "!../../../publications/_template/"
+    sort: "pub_number desc"
+    # sort-ui: true
+    filter-ui: true
+    include:
+      author: *TITLE
+    fields: [publication, title, categories, image, date, author]
+  - id: blogs
+    contents: 
+      - "../../../posts/**/*.qmd"
+    sort: "date desc"
+    # sort-ui: true
+    filter-ui: true
+    include:
+      author: *TITLE
+    fields: [title, date, description]
+about: 
+  id: about
+  template: solana
+  image-shape: rectangle
+  image: picture.jpg
+  links:
+    - icon: envelope
+      text: Email
+      href: mailto:not_here@gmail.com
+---
+
+<hr>
+
+::: {#about}
+## Background
+
+{{< meta education >}}
+:::
+
+<br>
+
+## Research Interests
+
+I am interested in utilising Vine Copulas to generate high dimensional joint distributions and generating prediction models from these. In particular applying this to high dimensional football data.
+
+## {{< meta first >}}' blogs
+
+::: {#blogs}
+:::
+
+<br>
+
+## {{< meta first >}}' Group Publications
+
+::: {#pubs}
+:::

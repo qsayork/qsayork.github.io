@@ -20,6 +20,8 @@ website:
     right:
       - href: index.qmd
         text: Home
+      - href: posts/RSScomp2026/
+        text: RSS Prediction Competition 2026
       - href: people/index.qmd
         text: People
       - href: posts/index.qmd

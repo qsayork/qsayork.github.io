@@ -1,0 +1,13 @@
+---
+title: "RSS Prediction Competition"
+date: "3/26/2026"
+author: "Jess Hargreaves"
+description: "Can you predict how many medals teams will win?"
+format: html
+editor: source
+categories:
+  - RSS
+  - Commonwealth Games
+---
+
+## This is the RSS prediction competition placeholder
