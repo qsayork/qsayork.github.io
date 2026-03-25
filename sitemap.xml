@@ -2,98 +2,106 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://qsayork.github.io/news/2026_3_13_roses/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.453Z</lastmod>
+    <lastmod>2026-03-25T14:10:05.730Z</lastmod>
   </url>
   <url>
     <loc>https://qsayork.github.io/news/2025_9_1_RSSinter/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.450Z</lastmod>
+    <lastmod>2026-03-25T14:10:05.728Z</lastmod>
   </url>
   <url>
     <loc>https://qsayork.github.io/people/bingham-rich/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.455Z</lastmod>
+    <lastmod>2026-03-25T14:10:05.732Z</lastmod>
   </url>
   <url>
     <loc>https://qsayork.github.io/people/stanley-rob/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.459Z</lastmod>
+    <lastmod>2026-03-25T14:10:05.737Z</lastmod>
   </url>
   <url>
     <loc>https://qsayork.github.io/people/broughton-tara/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.456Z</lastmod>
+    <lastmod>2026-03-25T14:10:05.732Z</lastmod>
   </url>
   <url>
-    <loc>https://qsayork.github.io/people/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.456Z</lastmod>
-  </url>
-  <url>
-    <loc>https://qsayork.github.io/publications/24_wavelet/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.487Z</lastmod>
-  </url>
-  <url>
-    <loc>https://qsayork.github.io/publications/25_the_split/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.491Z</lastmod>
-  </url>
-  <url>
-    <loc>https://qsayork.github.io/publications/25_kairosis/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.488Z</lastmod>
-  </url>
-  <url>
-    <loc>https://qsayork.github.io/publications/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.492Z</lastmod>
-  </url>
-  <url>
-    <loc>https://qsayork.github.io/posts/basketball_1/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.468Z</lastmod>
-  </url>
-  <url>
-    <loc>https://qsayork.github.io/posts/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.468Z</lastmod>
-  </url>
-  <url>
-    <loc>https://qsayork.github.io/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.409Z</lastmod>
-  </url>
-  <url>
-    <loc>https://qsayork.github.io/posts/the_split/SPLitBlogPost.html</loc>
-    <lastmod>2026-03-19T18:49:55.478Z</lastmod>
-  </url>
-  <url>
-    <loc>https://qsayork.github.io/posts/superbowl/Superbowl-pregame-analysis.html</loc>
-    <lastmod>2026-03-19T18:49:55.469Z</lastmod>
-  </url>
-  <url>
-    <loc>https://qsayork.github.io/publications/23_elo/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.483Z</lastmod>
-  </url>
-  <url>
-    <loc>https://qsayork.github.io/publications/24_skew/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.484Z</lastmod>
-  </url>
-  <url>
-    <loc>https://qsayork.github.io/publications/22_bookings/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.482Z</lastmod>
+    <loc>https://qsayork.github.io/people/richmond-india/index.html</loc>
+    <lastmod>2026-03-25T14:10:05.735Z</lastmod>
   </url>
   <url>
     <loc>https://qsayork.github.io/about.html</loc>
-    <lastmod>2026-03-19T18:49:55.405Z</lastmod>
+    <lastmod>2026-03-25T14:10:05.686Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qsayork.github.io/publications/22_bookings/index.html</loc>
+    <lastmod>2026-03-25T14:10:05.762Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qsayork.github.io/publications/24_skew/index.html</loc>
+    <lastmod>2026-03-25T14:10:05.764Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qsayork.github.io/publications/23_elo/index.html</loc>
+    <lastmod>2026-03-25T14:10:05.763Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qsayork.github.io/posts/superbowl/Superbowl-pregame-analysis.html</loc>
+    <lastmod>2026-03-25T14:10:05.747Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qsayork.github.io/posts/basketball_1/index.html</loc>
+    <lastmod>2026-03-25T14:10:05.746Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qsayork.github.io/posts/index.html</loc>
+    <lastmod>2026-03-25T14:10:05.746Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qsayork.github.io/index.html</loc>
+    <lastmod>2026-03-25T14:10:05.690Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qsayork.github.io/posts/the_split/SPLitBlogPost.html</loc>
+    <lastmod>2026-03-25T14:10:05.759Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qsayork.github.io/posts/RSScomp2026/index.html</loc>
+    <lastmod>2026-03-25T14:10:05.737Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qsayork.github.io/publications/index.html</loc>
+    <lastmod>2026-03-25T14:10:05.773Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qsayork.github.io/publications/25_kairosis/index.html</loc>
+    <lastmod>2026-03-25T14:10:05.769Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qsayork.github.io/publications/25_the_split/index.html</loc>
+    <lastmod>2026-03-25T14:10:05.772Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qsayork.github.io/publications/24_wavelet/index.html</loc>
+    <lastmod>2026-03-25T14:10:05.768Z</lastmod>
+  </url>
+  <url>
+    <loc>https://qsayork.github.io/people/index.html</loc>
+    <lastmod>2026-03-25T14:10:05.733Z</lastmod>
   </url>
   <url>
     <loc>https://qsayork.github.io/people/powell-ben/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.457Z</lastmod>
+    <lastmod>2026-03-25T14:10:05.734Z</lastmod>
   </url>
   <url>
     <loc>https://qsayork.github.io/people/hargreaves-jess/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.456Z</lastmod>
+    <lastmod>2026-03-25T14:10:05.733Z</lastmod>
   </url>
   <url>
     <loc>https://qsayork.github.io/people/rees_lindley-alun/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.458Z</lastmod>
+    <lastmod>2026-03-25T14:10:05.735Z</lastmod>
   </url>
   <url>
     <loc>https://qsayork.github.io/news/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.454Z</lastmod>
+    <lastmod>2026-03-25T14:10:05.731Z</lastmod>
   </url>
   <url>
     <loc>https://qsayork.github.io/news/2025_fac/index.html</loc>
-    <lastmod>2026-03-19T18:49:55.451Z</lastmod>
+    <lastmod>2026-03-25T14:10:05.729Z</lastmod>
   </url>
 </urlset>

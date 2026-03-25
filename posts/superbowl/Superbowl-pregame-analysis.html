@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,6 +11,9 @@
 
 <title>Predicting the Unpredictable: A Statistical Exploration of Super Bowl LX – QSAY</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -70,15 +73,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../images/qsay_logo_q.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-7622a089f7d1bb2af12a0e4415591796.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-bb669177a40749fcf46b1d713d5ae2cf.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -109,7 +111,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <style>html{ scroll-behavior: smooth; }</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -162,6 +164,10 @@ window.Quarto = {
   <li class="nav-item">
     <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../posts/RSScomp2026/"> 
+<span class="menu-text">RSS Prediction Competition 2026</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../people/index.html"> 
@@ -394,7 +400,7 @@ Table&nbsp;1: Current Elo Ratings (as of February 7, 2026)
 </figcaption>
 <div aria-describedby="tbl-current-elo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Team</th>
@@ -504,7 +510,7 @@ Table&nbsp;2: Historical Super Bowl Scoring Statistics (2005-2025)
 </figcaption>
 <div aria-describedby="tbl-sb-scoring-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 29%">
 <col style="width: 6%">
@@ -589,7 +595,7 @@ Table&nbsp;3: 2025 Season Performance Adjustments
 </figcaption>
 <div aria-describedby="tbl-team-adjustments-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 3%">
 <col style="width: 12%">
@@ -684,7 +690,7 @@ Table&nbsp;4: Model Predictions Comparison
 </figcaption>
 <div aria-describedby="tbl-predictions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Model</th>
@@ -735,7 +741,7 @@ Table&nbsp;5: Detailed Performance Predictions
 </figcaption>
 <div aria-describedby="tbl-detailed-predictions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 25%">
 <col style="width: 14%">
@@ -831,7 +837,7 @@ Table&nbsp;6: Super Bowl LX Betting Odds - Major Sportsbooks (as of February 7, 
 </figcaption>
 <div aria-describedby="tbl-betting-odds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 15%">
 <col style="width: 15%">
@@ -1012,7 +1018,7 @@ Table&nbsp;7: Model Predictions vs.&nbsp;Betting Market
 </figcaption>
 <div aria-describedby="tbl-model-vs-vegas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 25%">
 <col style="width: 20%">
