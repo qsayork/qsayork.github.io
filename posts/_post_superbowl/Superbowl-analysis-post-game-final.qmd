@@ -1,0 +1,820 @@
+---
+title: "Super Bowl LX: Seattle Seahawks vs. New England Patriots"
+subtitle: "How the Game Unfolded and How the Predictions Held Up"
+author: "Alun Rees-Lindley"
+date: "2026-02-16"
+format:
+  html:
+    code-fold: true
+    code-summary: "Show code"
+    toc: true
+    toc-depth: 3
+    theme: cosmo
+execute:
+  warning: false
+  message: false
+---
+
+## Introduction
+
+On the 7$^{th}$ of February 2026, I locked in a statistical prediction: the Seattle Seahawks would beat the New England Patriots in Super Bowl LX with a **60.3% probability**, with an expected score of **SEA 24.9 -- NE 23.4**. Two independent models --- a FiveThirtyEight-inspired Elo rating system and a historical Monte Carlo simulation --- had converged on the same verdict from entirely different assumptions, which is about the strongest form of agreement in statistical modelling. The betting markets were more bullish, pricing Seattle at approximately 70% on a -4.5 point spread; ten percentage points separated the models from the market's collective wisdom.
+
+The game was played, and Seattle obtained a convincing 29-13 victory against the Patriots. This result is sweet vengeance for Seahawks fans after their last encounter with the Patriots in Super Bowl XLIX back in 2015, when Tom Brady led his team to victory from a 10 point defecit in the 4$^{th}$ quarter, to win 28-24. If you haven't seen that game, I do recommend it - many regard it as one of the best in NFL history. What makes Seattle's win in this year's Super Bowl so special is not only redemption for the franchise and a return to the biggest game in the sport, but also the hero arc of their quarterback, Sam Darnold. Darnold has had a tumultuous time in the NFL since joining in 2018. Seattle is the 5$^{th}$ team in the league, and he has struggled to find form. However, his luck changed after joining the Minnesota Vikings, and he has had a stellar year since joining Seattle as a free agent in March 2025, throwing for over 4,000 yards and 25 touchdowns in the regular season. Having set the scene for Seattle's historic win, it is now time to explore how the game unfolded and how accurate my predictions were.
+
+It is *relatively* easy to make predictions; few have the desire to return and scrutinise them which is exactly what I will be doing. This article is the second half of my previous predictions about this game. We will examine not just whether Seattle won, but how - unpacking the play-by-play data to understand what drove the result, where the models were well-calibrated, and what the gaps between prediction and performance reveal about the limits of statistical forecasting in sport. It also gives us a chance to dig into which aspects won and lost the game for each team.
+
+::: callout-note
+## Prediction Accountability
+
+Pre-game predictions were locked on **7 February 2026 at 6:00 PM GMT**. No modifications were made after that timestamp. The full methodology - Elo rating system, historical simulation, model comparison with betting markets - is documented in the [accompanying pre-game analysis](#Can%20we%20make%20a%20link%20to%20the%20previous%20article%20please?). All code uses the open-source [nflverse](https://nflverse.nflverse.com/) data ecosystem and is fully reproducible.
+:::
+
+```{r setup}
+#| label: setup
+#| include: false
+
+library(ggplot2)
+library(dplyr)
+library(nflfastR)
+library(nflreadr)
+library(plotly)
+library(gt)
+library(gtExtras)
+library(knitr)
+library(scales)
+
+# -- Brand colours --------------------------------------------------------------
+# Seattle: Action Green (#69BE28) distinguishes them clearly from NE
+# New England: Century Red (#C60C30) - this clashes with Seattle's green so will try and avoid
+# Navy (#002244) is a colour shared by both teams but will use mainly for NE
+sea_green <- "#69BE28"
+sea_navy  <- "#002244"
+sea_grey  <- "#A5ACAF"
+ne_red    <- "#C60C30"
+ne_navy   <- "#002244"
+mid_grey  <- "#6c757d"
+
+# -- Locked pre-game predictions (7 Feb 2026) -----------------------------------
+pred_sea_score    <- 24.9
+pred_ne_score     <- 23.4
+pred_sea_win_prob <- 0.603
+pred_total        <- pred_sea_score + pred_ne_score
+pred_spread       <- pred_sea_score - pred_ne_score
+
+# -- Load game schedule ---------------------------------------------------------
+games_2025 <- nflreadr::load_schedules(seasons = 2025)
+sb         <- games_2025 |> dplyr::filter(game_type == "SB", season == 2025)
+
+sea_is_home  <- sb$home_team == "SEA"
+sea_score    <- if (sea_is_home) sb$home_score else sb$away_score
+ne_score     <- if (sea_is_home) sb$away_score  else sb$home_score
+margin       <- sea_score - ne_score
+sea_won      <- margin > 0
+actual_total <- sea_score + ne_score
+
+# Model calibration: map outcome to the four pre-game scenarios
+# These were outlined in previous article but not quantified
+calibration_label <- dplyr::case_when(
+  sea_won  & margin >= 1  & margin <= 7  ~ "well-calibrated — a close Seattle win",
+  sea_won  & margin >= 10                ~ "models underestimated Seattle's dominance",
+  !sea_won & abs(margin) <= 7            ~ "the 40% window — a narrow New England win",
+  !sea_won & abs(margin) >= 10           ~ "a fundamental miss — New England dominated",
+  TRUE                                    ~ "a borderline, tightly contested result"
+)
+
+# -- Load play-by-play ----------------------------------------------------------
+pbp_raw <- nflfastR::load_pbp(2025) |>
+  dplyr::filter(game_id == sb$game_id)
+
+ot_played <- max(pbp_raw$qtr, na.rm = TRUE) > 4
+
+# Add elapsed time, running team scores, and points_scored per play
+pbp_sb <- pbp_raw |>
+  dplyr::mutate(
+    game_seconds_elapsed = dplyr::case_when(
+      qtr <= 4 ~ 3600 - game_seconds_remaining,
+      qtr == 5 ~ 3600 + pmax(0, 600 - game_seconds_remaining),
+      TRUE     ~ NA_real_
+    ),
+    sea_pts      = if (sea_is_home) total_home_score else total_away_score,
+    ne_pts       = if (sea_is_home) total_away_score else total_home_score,
+    points_scored = posteam_score_post - posteam_score
+  )
+
+# X-axis ticks for time-series charts (handles OT)
+qtr_breaks <- c(0, 900, 1800, 2700, 3600, if (ot_played) 4200 else NULL)
+qtr_labels <- c("Kickoff", "Q2", "Q3", "Q4", "Final",
+                if (ot_played) "OT Final" else NULL)
+
+# Quarter divider shapes and annotations (reused across all time-series charts)
+qtr_shapes <- list(
+  list(type = "line", x0 = 900,  x1 = 900,  y0 = 0, y1 = 1, yref = "paper",
+       line = list(color = "#cccccc", dash = "dot", width = 1.5)),
+  list(type = "line", x0 = 1800, x1 = 1800, y0 = 0, y1 = 1, yref = "paper",
+       line = list(color = "#cccccc", dash = "dot", width = 1.5)),
+  list(type = "line", x0 = 2700, x1 = 2700, y0 = 0, y1 = 1, yref = "paper",
+       line = list(color = "#cccccc", dash = "dot", width = 1.5))
+)
+
+qtr_annots <- list(
+  list(x = 450,  y = 1.04, yref = "paper", text = "<b>Q1</b>", showarrow = FALSE,
+       font = list(color = "#999999", size = 12)),
+  list(x = 1350, y = 1.04, yref = "paper", text = "<b>Q2</b>", showarrow = FALSE,
+       font = list(color = "#999999", size = 12)),
+  list(x = 2250, y = 1.04, yref = "paper", text = "<b>Q3</b>", showarrow = FALSE,
+       font = list(color = "#999999", size = 12)),
+  list(x = 3150, y = 1.04, yref = "paper", text = "<b>Q4</b>", showarrow = FALSE,
+       font = list(color = "#999999", size = 12))
+)
+
+# -- Halftime and Q3 scores for narrative ---------------------------------------
+# Need this to make timeline of scores by each team
+halftime <- pbp_sb |>
+  dplyr::filter(qtr == 2, !is.na(sea_pts)) |>
+  dplyr::arrange(dplyr::desc(game_seconds_elapsed)) |>
+  dplyr::slice_head(n = 1)
+
+q3_end <- pbp_sb |>
+  dplyr::filter(qtr == 3, !is.na(sea_pts)) |>
+  dplyr::arrange(dplyr::desc(game_seconds_elapsed)) |>
+  dplyr::slice_head(n = 1)
+
+sea_ht <- halftime$sea_pts
+ne_ht  <- halftime$ne_pts
+sea_q3 <- q3_end$sea_pts
+ne_q3  <- q3_end$ne_pts
+
+# -- Aggregate team statistics --------------------------------------------------
+team_stats <- pbp_sb |>
+  dplyr::filter(!is.na(posteam)) |>
+  dplyr::group_by(team = posteam) |>
+  dplyr::summarise(
+    plays         = n(),
+    pass_attempts = sum(pass_attempt,   na.rm = TRUE),
+    completions   = sum(complete_pass,  na.rm = TRUE),
+    pass_yards    = sum(passing_yards,  na.rm = TRUE),
+    pass_tds      = sum(pass_touchdown, na.rm = TRUE),
+    interceptions = sum(interception,   na.rm = TRUE),
+    rush_attempts = sum(rush_attempt,   na.rm = TRUE),
+    rush_yards    = sum(rushing_yards,  na.rm = TRUE),
+    rush_tds      = sum(rush_touchdown, na.rm = TRUE),
+    total_yards   = pass_yards + rush_yards,
+    sacks_taken   = sum(sack,           na.rm = TRUE),
+    fumbles_lost  = sum(fumble_lost,    na.rm = TRUE),
+    turnovers     = interceptions + fumbles_lost,
+    avg_epa       = mean(epa,           na.rm = TRUE),
+    success_rate  = mean(success,       na.rm = TRUE) * 100,
+    .groups       = "drop"
+  ) |>
+  dplyr::mutate(
+    comp_pct = completions / pass_attempts * 100,
+    ypc      = rush_yards  / rush_attempts,
+    ypa      = pass_yards  / pass_attempts
+  )
+
+sea_s <- team_stats |> dplyr::filter(team == "SEA")
+ne_s  <- team_stats |> dplyr::filter(team == "NE")
+
+# -- Third down efficiency ------------------------------------------------------
+third_down <- pbp_sb |>
+  dplyr::filter(down == 3, !is.na(posteam)) |>
+  dplyr::group_by(team = posteam) |>
+  dplyr::summarise(
+    att  = n(),
+    conv = sum(third_down_converted, na.rm = TRUE),
+    pct  = conv / att * 100,
+    .groups = "drop"
+  )
+
+sea_3rd <- third_down |> dplyr::filter(team == "SEA")
+ne_3rd  <- third_down |> dplyr::filter(team == "NE")
+
+# -- Turnovers detail -----------------------------------------------------------
+turnovers_tbl <- pbp_sb |>
+  dplyr::filter(
+    (interception == 1 | fumble_lost == 1),
+    !is.na(posteam)
+  ) |>
+  dplyr::mutate(
+    type = dplyr::case_when(
+      interception == 1 ~ "Interception",
+      fumble_lost  == 1 ~ "Fumble Lost"
+    )
+  ) |>
+  dplyr::select(qtr, time, posteam, type, desc)
+
+# -- QB stats -------------------------------------------------------------------
+qb_stats <- pbp_sb |>
+  dplyr::filter(!is.na(passer_player_name), pass_attempt == 1) |>
+  dplyr::group_by(team = posteam, player = passer_player_name) |>
+  dplyr::summarise(
+    att     = n(),
+    comp    = sum(complete_pass,  na.rm = TRUE),
+    yards   = sum(passing_yards,  na.rm = TRUE),
+    tds     = sum(pass_touchdown, na.rm = TRUE),
+    ints    = sum(interception,   na.rm = TRUE),
+    sacks   = sum(sack,           na.rm = TRUE),
+    avg_epa = mean(epa,           na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    comp_pct = comp / att * 100,
+    passer_rating = round(
+      pmax(0, pmin(158.3,
+        ((pmax(0, pmin(2.375, (comp_pct / 100 - 0.3) * 5)) +
+           pmax(0, pmin(2.375, (yards / att - 3) * 0.25)) +
+           pmax(0, pmin(2.375, tds / att * 20)) +
+           pmax(0, pmin(2.375, 2.375 - ints / att * 25)))) / 6 * 100
+      )), 1
+    )
+  )
+
+# -- Rushing stats --------------------------------------------------------------
+rush_stats <- pbp_sb |>
+  dplyr::filter(!is.na(rusher_player_name), rush_attempt == 1) |>
+  dplyr::group_by(team = posteam, player = rusher_player_name) |>
+  dplyr::summarise(
+    carries = n(),
+    yards   = sum(rushing_yards,  na.rm = TRUE),
+    tds     = sum(rush_touchdown, na.rm = TRUE),
+    long    = max(rushing_yards,  na.rm = TRUE),
+    avg_epa = mean(epa,           na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(ypc = yards / carries) |>
+  dplyr::filter(carries >= 3) |>
+  dplyr::arrange(dplyr::desc(yards))
+
+# -- Receiving stats ------------------------------------------------------------
+recv_stats <- pbp_sb |>
+  dplyr::filter(!is.na(receiver_player_name), pass_attempt == 1) |>
+  dplyr::group_by(team = posteam, player = receiver_player_name) |>
+  dplyr::summarise(
+    targets = n(),
+    recs    = sum(complete_pass,   na.rm = TRUE),
+    yards   = sum(receiving_yards, na.rm = TRUE),
+    tds     = sum(pass_touchdown,  na.rm = TRUE),
+    avg_epa = mean(epa,            na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    catch_pct = recs / targets * 100,
+    ypr       = dplyr::if_else(recs > 0, yards / recs, 0)
+  ) |>
+  dplyr::filter(targets >= 2) |>
+  dplyr::arrange(dplyr::desc(yards))
+
+# -- Top 10 plays by absolute EPA -----------------------------------------------
+top_plays <- pbp_sb |>
+  dplyr::filter(!is.na(epa), !is.na(posteam), play_type %in% c("pass", "run")) |>
+  dplyr::arrange(dplyr::desc(abs(epa))) |>
+  dplyr::slice_head(n = 10) |>
+  dplyr::select(qtr, time, posteam, epa, play_type, yards_gained, desc) |>
+  dplyr::mutate(desc = stringr::str_trunc(desc, 95))
+```
+
+## Part I: Prediction Accountability
+
+### What We Forecast
+
+Two numbers anchored my pre-game analysis: a **60.3% win probability** for Seattle (Elo model; the baseline Monte Carlo simulation agreed at 59.1%), and a predicted score of **SEA 24.9 -- NE 23.4**. The agreement between the two models - built from entirely different assumptions --- was presented as the strongest signal available. The betting market saw the same winner but with greater conviction and had Seattle to win at odds of \$\~\$70%
+
+### What Actually Happened
+
+::: callout-important
+## Final Result --- Super Bowl LX
+
+**`r if (sea_won) paste0("Seattle Seahawks ", sea_score, ", New England Patriots ", ne_score) else paste0("New England Patriots ", ne_score, ", Seattle Seahawks ", sea_score)`**
+
+Margin: `r abs(margin)` points \| Total: `r actual_total` points
+:::
+
+The game outcome maps to the **`r calibration_label`** scenario from the pre-game analysis.
+
+```{r prediction-comparison}
+#| label: pred-comparison
+
+tibble(
+  Metric     = c("Seattle Score", "NE Score", "Total Points", "Point Spread (SEA favoured)"),
+  Predicted  = c(pred_sea_score, pred_ne_score, pred_total, pred_spread),
+  Actual     = c(sea_score, ne_score, actual_total, as.numeric(margin)),
+  Difference = Actual - Predicted
+) |>
+  gt() |>
+  tab_header(
+    title    = "Prediction vs. Reality",
+    subtitle = "Elo/Baseline model average (locked 7 Feb 2026) vs. actual result"
+  ) |>
+  cols_label(
+    Metric     = "Metric",
+    Predicted  = "Predicted",
+    Actual     = "Actual",
+    Difference = "Difference"
+  ) |>
+  fmt_number(columns = c(Predicted, Actual, Difference), decimals = 1) |>
+  tab_style(
+    style     = cell_text(color = "#228B22", weight = "bold"),
+    locations = cells_body(columns = Difference, rows = Difference > 0)
+  ) |>
+  tab_style(
+    style     = cell_text(color = ne_red, weight = "bold"),
+    locations = cells_body(columns = Difference, rows = Difference < 0)
+  ) |>
+  tab_footnote(
+    footnote  = "Spread shown from Seattle's perspective: positive = Seattle won by more than predicted.",
+    locations = cells_column_labels(columns = Difference)
+  )
+```
+
+The models correctly identified the winner, vindicating the 60% probability call. However, the `r margin`-point margin was considerably larger than the 1.5-point predicted spread --- suggesting the models, while correct about direction, underestimated Seattle's dominance on the day. The total points figure of `r actual_total` compared with the predicted `r round(pred_total, 0)` --- sitting `r if (actual_total > pred_total) "above" else "below"` expectations. The shortfall was not symmetric: Seattle's score of `r sea_score` was reasonably close to the predicted `r pred_sea_score`, but New England's `r ne_score` points represent something closer to a defensive shutout than the competitive `r pred_ne_score` the models anticipated. Scoring 13 points in a Super Bowl is not bad luck --- it is the result of a stubborn defense that won the battle in the moments that mattered and stopped New England's stars from getting on the scoreboard.
+
+## Part II: The Game in Numbers
+
+### Score Timeline
+
+The chart below traces the cumulative score from kickoff to the final whistle, with each scoring event marked at its precise game time. The step-function shape is deliberate: score is a discrete quantity that jumps at scoring plays and is flat in between. Hover over any marker for the details.
+
+```{r score-timeline}
+#| label: score-timeline
+
+# Distinct time points for clean step-function lines
+score_data <- pbp_sb |>
+  dplyr::filter(!is.na(game_seconds_elapsed)) |>
+  dplyr::select(game_seconds_elapsed, qtr, sea_pts, ne_pts) |>
+  dplyr::arrange(game_seconds_elapsed) |>
+  dplyr::distinct(game_seconds_elapsed, .keep_all = TRUE)
+
+# Scoring events with hover labels (points_scored already in pbp_sb from setup)
+score_events <- pbp_sb |>
+  dplyr::filter(!is.na(points_scored), points_scored > 0, !is.na(posteam)) |>
+  dplyr::mutate(
+    annotate_y = dplyr::if_else(posteam == "SEA", sea_pts, ne_pts),
+    score_type = dplyr::case_when(
+      touchdown == 1              ~ "Touchdown",
+      field_goal_result == "made" ~ "Field Goal",
+      safety == 1                 ~ "Safety",
+      TRUE                        ~ "Score"
+    ),
+    hover_text = paste0(
+      "<b>", posteam, " ", score_type, "</b><br>",
+      "Q", qtr, " | ", time, "<br>",
+      "SEA ", sea_pts, " \u2013 NE ", ne_pts, "<br>",
+      "<i>", stringr::str_trunc(desc, 70), "</i>"
+    )
+  ) |>
+  dplyr::arrange(game_seconds_elapsed)
+
+sea_events <- score_events |> dplyr::filter(posteam == "SEA")
+ne_events  <- score_events |> dplyr::filter(posteam == "NE")
+
+plot_ly() |>
+  add_trace(
+    data = score_data, x = ~game_seconds_elapsed, y = ~sea_pts,
+    type = "scatter", mode = "lines",
+    line = list(color = sea_green, width = 3, shape = "hv"),
+    name = "Seattle", hoverinfo = "none"
+  ) |>
+  add_trace(
+    data = score_data, x = ~game_seconds_elapsed, y = ~ne_pts,
+    type = "scatter", mode = "lines",
+    line = list(color = ne_navy, width = 3, shape = "hv"),
+    name = "New England", hoverinfo = "none"
+  ) |>
+  add_trace(
+    data = sea_events, x = ~game_seconds_elapsed, y = ~annotate_y,
+    type = "scatter", mode = "markers",
+    marker = list(color = sea_green, size = 11, symbol = "circle",
+                  line = list(color = "white", width = 2)),
+    name = "SEA Score", text = ~hover_text,
+    hoverinfo = "text", showlegend = FALSE
+  ) |>
+  add_trace(
+    data = ne_events, x = ~game_seconds_elapsed, y = ~annotate_y,
+    type = "scatter", mode = "markers",
+    marker = list(color = ne_navy, size = 11, symbol = "circle",
+                  line = list(color = "white", width = 2)),
+    name = "NE Score", text = ~hover_text,
+    hoverinfo = "text", showlegend = FALSE
+  ) |>
+  layout(
+    title  = list(text = "Super Bowl LX: Score Timeline", font = list(size = 16)),
+    xaxis  = list(title = "", tickvals = qtr_breaks, ticktext = qtr_labels,
+                  gridcolor = "#eeeeee", zeroline = FALSE),
+    yaxis  = list(title = "Points", gridcolor = "#eeeeee", zeroline = TRUE,
+                  zerolinecolor = "#dddddd"),
+    legend = list(x = 0.02, y = 0.97, bgcolor = "rgba(255,255,255,0.85)",
+                  bordercolor = "#dddddd", borderwidth = 1),
+    paper_bgcolor = "white", plot_bgcolor = "white",
+    shapes = qtr_shapes, annotations = qtr_annots
+  )
+```
+
+At halftime, the score stood at **SEA `r sea_ht` -- NE `r ne_ht`**. Seattle led at the break, having established the early advantage the pre-game models anticipated from their superior point differential. Entering the fourth quarter, the score was **SEA `r sea_q3` -- NE `r ne_q3`**.
+
+### Win Probability
+
+Where the score timeline shows what happened, the win probability chart shows how certain the data was about it at every moment. The nflfastR win probability model updates on every play, conditioning on score differential, field position, down, distance, and time remaining. A flat line near 1.0 indicates sustained control; the sharp drops and spikes are the moments the game could have gone differently.
+
+```{r win-probability}
+#| label: win-prob
+
+# Use home_wp / away_wp if available; fall back to possessing-team wp
+wp_data <- if ("home_wp" %in% names(pbp_sb)) {
+  pbp_sb |>
+    dplyr::filter(!is.na(home_wp), !is.na(game_seconds_elapsed)) |>
+    dplyr::mutate(sea_wp = if (sea_is_home) home_wp else away_wp) |>
+    dplyr::arrange(game_seconds_elapsed)
+} else {
+  pbp_sb |>
+    dplyr::filter(!is.na(wp), !is.na(game_seconds_elapsed), !is.na(posteam)) |>
+    dplyr::mutate(sea_wp = dplyr::if_else(posteam == "SEA", wp, 1 - wp)) |>
+    dplyr::arrange(game_seconds_elapsed)
+}
+
+plot_ly(wp_data) |>
+  add_trace(
+    x = ~game_seconds_elapsed, y = ~sea_wp,
+    type = "scatter", mode = "lines",
+    fill = "tozeroy",
+    fillcolor = "rgba(105, 190, 40, 0.18)",
+    line = list(color = sea_green, width = 2.5),
+    name = "SEA Win Probability",
+    hovertemplate = "Elapsed: %{x}s<br>P(SEA Win): %{y:.1%}<extra></extra>"
+  ) |>
+  add_trace(
+    x = c(0, max(wp_data$game_seconds_elapsed, na.rm = TRUE)),
+    y = c(0.5, 0.5),
+    type = "scatter", mode = "lines",
+    line = list(color = "#999999", dash = "dash", width = 1),
+    showlegend = FALSE, hoverinfo = "none", name = "50%"
+  ) |>
+  layout(
+    title  = list(text = "Win Probability: Seattle Seahawks", font = list(size = 16)),
+    xaxis  = list(title = "", tickvals = qtr_breaks, ticktext = qtr_labels,
+                  gridcolor = "#eeeeee", zeroline = FALSE),
+    yaxis  = list(title = "P(SEA Win)", tickformat = ".0%", range = c(0, 1),
+                  gridcolor = "#eeeeee"),
+    paper_bgcolor = "white", plot_bgcolor = "white",
+    shapes = qtr_shapes, annotations = qtr_annots
+  )
+```
+
+The chart above documents the game's psychological arc. Note that the chart opens at approximately 45% for Seattle rather than the 60.3% from our pre-game Elo model --- this reflects a fundamental difference between the two: our Elo model is a pre-game prediction tool using season-long performance data, whereas nflfastR's in-game win probability model initialises from the Vegas spread and game-state variables, and applies a small home-field adjustment that can introduce a modest artifact at neutral-site games. There is also the probability of a draw in the game, so the in-game win probability was not backing a Patriots win. From that starting point, however, the trajectory is unambiguous: Seattle crossed the 50% mark early in the game, and although they darted back and forth slightly, there was little doubt that they were the favourites in this game. The area under the curve --- literally the integral of win probability over game time --- captures something no final score can: how much of the game Seattle spent in control.
+
+```{r game-control-index}
+#| label: game-control-index
+
+game_control <- wp_data |>
+  dplyr::arrange(game_seconds_elapsed) |>
+  dplyr::mutate(
+    dt = dplyr::lead(game_seconds_elapsed) - game_seconds_elapsed
+  ) |>
+  dplyr::filter(!is.na(dt), dt > 0) |>
+  dplyr::summarise(
+    gci = sum(sea_wp * dt) / sum(dt)
+  ) |>
+  dplyr::pull(gci)
+
+```
+
+Seattle's Game Control Index --- the time-averaged win probability across all 3,600 seconds of regulation --- was `r round(game_control * 100, 1)`%, meaning that at the average moment during this game, Seattle had a `r round(game_control * 100, 1)`% chance of winning. For context, a perfectly even game would score 50%; the pre-game favourite starting at \~45% and averaging well above 70% tells you something the final scoreline alone cannot.
+
+## Part III: The Balance of Power --- EPA Analysis
+
+Raw statistics can tell us what happened during the game, but the Expected Points Added (EPA) variable tells us how efficiently it happened.
+
+EPA measures the change in scoring probability (as shown above) generated by each play, conditioned on the game situation. A 3-yard gain on 3rd-and-2 is worth far more than the same gain on 1st-and-10 - EPA quantifies exactly that distinction. The *nflfastR* model, trained on hundreds of thousands of NFL plays, assigns each play an EPA value relative to what an average team would generate from the same field position, down, and distance.
+
+Cumulated across all plays, team-level EPA reveals the true balance of power, stripping away the score's dependence on field position luck and red-zone execution variance.
+
+```{r cumulative-epa}
+#| label: cum-epa
+
+epa_timeline <- pbp_sb |>
+  dplyr::filter(!is.na(epa), !is.na(posteam)) |>
+  dplyr::arrange(game_seconds_elapsed) |>
+  dplyr::group_by(posteam) |>
+  dplyr::mutate(cum_epa = cumsum(epa)) |>
+  dplyr::ungroup()
+
+epa_sea <- epa_timeline |> dplyr::filter(posteam == "SEA")
+epa_ne  <- epa_timeline |> dplyr::filter(posteam == "NE")
+
+plot_ly() |>
+  add_trace(
+    data = epa_sea, x = ~game_seconds_elapsed, y = ~cum_epa,
+    type = "scatter", mode = "lines",
+    line = list(color = sea_green, width = 2.5),
+    name = "Seattle",
+    hovertemplate = "SEA Cumulative EPA: %{y:.2f}<extra></extra>"
+  ) |>
+  add_trace(
+    data = epa_ne, x = ~game_seconds_elapsed, y = ~cum_epa,
+    type = "scatter", mode = "lines",
+    line = list(color = ne_navy, width = 2.5),
+    name = "New England",
+    hovertemplate = "NE Cumulative EPA: %{y:.2f}<extra></extra>"
+  ) |>
+  add_trace(
+    x = c(0, max(epa_timeline$game_seconds_elapsed, na.rm = TRUE)),
+    y = c(0, 0),
+    type = "scatter", mode = "lines",
+    line = list(color = "#999999", dash = "solid", width = 1),
+    showlegend = FALSE, hoverinfo = "none"
+  ) |>
+  layout(
+    title  = list(text = "Cumulative EPA: The Balance of Power", font = list(size = 16)),
+    xaxis  = list(title = "", tickvals = qtr_breaks, ticktext = qtr_labels,
+                  gridcolor = "#eeeeee", zeroline = FALSE),
+    yaxis  = list(title = "Cumulative Expected Points Added", gridcolor = "#eeeeee"),
+    legend = list(x = 0.02, y = 0.98, bgcolor = "rgba(255,255,255,0.85)"),
+    paper_bgcolor = "white", plot_bgcolor = "white",
+    shapes = qtr_shapes, annotations = qtr_annots
+  )
+```
+
+The gradient of each line tells the story as clearly as any scoreboard: steeper upward slopes mean a team is generating sustained value; plateaus mean stagnation; downward dips mean plays that made things worse. Seattle's overall EPA per play was **`r round(sea_s$avg_epa, 3)`**; New England's was **`r round(ne_s$avg_epa, 3)`**. The Patriots' negative average EPA is the statistical signature of Seattle's defence: New England's offence, on average, generated less expected value than a league-average team in the same situation. The lines in this chart show that the Seahawks showed a fairly steady upwards trend, whereas the Patriots trajectory headed in the opposite direction. The fourth quarter shows a slight resurgence by New England that was reflected in their scoring 2 touchdowns, but at that point in the game, the writing was on the wall. This was not a close contest --- the graph shows that Patriots were locked out by the Seahawks' defence.
+
+## Part IV: How Seattle Won
+
+### 4.1 The Defence: Systematic Suppression
+
+The pre-game analysis identified Seattle's defence as the statistical story of the 2025 season: a unit that had conceded just 17.1 points per game, the lowest mark in the league by some margin. However, they were up against a New England offence that had ranked in the top four in both points scored and efficiency - this game should have been a case of an unstoppable force versus an immovable object.
+
+```{r stats-comparison}
+#| label: stats-comparison
+
+# Chart 1: Volume stats
+vol_df <- tibble::tibble(
+  Metric        = c("Total Yards", "Pass Yards", "Rush Yards"),
+  Seattle       = c(sea_s$total_yards, sea_s$pass_yards, sea_s$rush_yards),
+  `New England` = c(ne_s$total_yards,  ne_s$pass_yards,  ne_s$rush_yards)
+) |>
+  tidyr::pivot_longer(cols = c(Seattle, `New England`),
+                      names_to = "Team", values_to = "Value")
+
+p1 <- plot_ly(vol_df) |>
+  add_bars(
+    x = ~Value, y = ~Metric,
+    color = ~Team,
+    colors = c("Seattle" = sea_green, "New England" = ne_navy),
+    orientation = "h",
+    hovertemplate = "%{y}: %{x} yards<extra>%{fullData.name}</extra>"
+  ) |>
+  layout(
+    title   = list(text = "Offensive Volume", font = list(size = 15)),
+    barmode = "group",
+    xaxis   = list(title = "Yards", gridcolor = "#eeeeee"),
+    yaxis   = list(title = "", autorange = "reversed"),
+    legend  = list(x = 0.5, y = -0.15, orientation = "h"),
+    paper_bgcolor = "white", plot_bgcolor = "white"
+  )
+
+# Chart 2: Efficiency stats
+eff_df <- tibble::tibble(
+  Metric        = #c("Avg EPA / Play", "Success Rate (%)", "3rd Down Conv (%)", "Turnovers"),
+                  c("Success Rate (%)", "3rd Down Conv (%)", "Turnovers"),
+  Seattle       = #c(round(sea_s$avg_epa, 3), round(sea_s$success_rate, 1),
+                    c(round(sea_s$success_rate, 1),
+                    round(sea_3rd$pct, 1),   sea_s$turnovers),
+  `New England` = #c(round(ne_s$avg_epa, 3),  round(ne_s$success_rate, 1),
+                    c(round(ne_s$success_rate, 1),
+                    round(ne_3rd$pct, 1),    ne_s$turnovers)
+) |>
+  tidyr::pivot_longer(cols = c(Seattle, `New England`),
+                      names_to = "Team", values_to = "Value")
+
+p2 <- plot_ly(eff_df) |>
+  add_bars(
+    x = ~Value, y = ~Metric,
+    color = ~Team,
+    colors = c("Seattle" = sea_green, "New England" = ne_navy),
+    orientation = "h",
+    showlegend = FALSE,
+    hovertemplate = "%{y}: %{x}<extra>%{fullData.name}</extra>"
+  ) |>
+  layout(
+    title   = list(text = "Efficiency Metrics", font = list(size = 15)),
+    barmode = "group",
+    xaxis   = list(title = "Value", gridcolor = "#eeeeee"),
+    yaxis   = list(title = "", autorange = "reversed", side = "right"),
+    paper_bgcolor = "white", plot_bgcolor = "white"
+  )
+
+subplot(p1, p2, nrows = 1, shareY = FALSE, titleX = TRUE, titleY = TRUE) |>
+  layout(title = list(text = "Team Statistical Comparison — Super Bowl LX",
+                      font = list(size = 16)))
+```
+
+The defensive story is written in New England's offensive numbers. The Patriots generated 295 yards through the air and 79 yards on the ground. Despite making more overall yardage (ignoring kick return yards) then the Seahawks, the Patriots struggled to convert against a Seattle defense that gave them little room to operate. Despite having more favourable metrics across almost all of the indicators shown in the chart above, the Patriots lost the game. The one exception is rush yards, thanks to the incredible performance of Kenneth Walker to single handedly gain his team 141 yards up the field. So why is it that despite having: a higher overall yardage; higher 3rd down conversion rate (the posession prior to 4th when teams tend to kick away possesion); and a higher success rate (their ability to maintain posession and convert downs to subsequent first downs) - did the Patriots lose this game? The key metrics to answer this is the 3 turnovers that they conceeded to Seattle's defence.
+
+New England committed 3 turnover against Seattle's 0 --- a differential that directly translates to field position and scoring opportunities surrendered. Research consistently shows turnover differential is among the strongest predictors of single-game outcome, and Super Bowl LX was no exception.
+
+### 4.2 Running the Ball
+
+The pre-game models anticipated a balanced Seattle attack - 125 rush yards and 265 pass yards - compared with New England's more conservative projection of 110 rush yards and 245 pass yards. Seattle delivered `r sea_s$rush_yards` rushing yards on `r sea_s$rush_attempts` carries, `r round(sea_s$ypc, 2)` yards per carry --- exceeding the prediction and confirming the ground game, and more specifically, Kenneth Walker, as a genuine weapon. New England made impressive yardage despite the outcome of the game and losing possession 3 times. New England's rushing game was rather feeble in comparison to its passing game. Despite having 3 players who could run the ball effectively, they only managed a total of 79 yards between them, with the majority of that being contributed by their quarterback rather than their running backs.
+
+A key consideration that isn't shown above is the number of sacks each Quarterback received. Despite making 295 yards in the air, New England's QB, Drake Maye, was sacked 6 times for a loss of 43 yards, giving a total passing yardage of 252 yards. In contrast, his opposition, Sam Darnold, was only sacked once for a loss of 8 yards. This is a huge difference and once again demonstrates the pivotal role that Seattle's defence played in restricting the New England offence.
+
+```{r rushing}
+#| label: rushing
+
+rush_plot <- rush_stats |>
+  dplyr::mutate(
+    team_color = dplyr::if_else(team == "SEA", sea_green, ne_navy),
+    hover_text = paste0(
+      "<b>", player, " (", team, ")</b><br>",
+      carries, " carries | ", yards, " yards<br>",
+      "YPC: ", round(ypc, 1), " | TDs: ", tds, "<br>",
+      "Avg EPA/carry: ", round(avg_epa, 3)
+    )
+  )
+
+plot_ly(rush_plot) |>
+  add_bars(
+    x = ~yards, y = ~reorder(player, yards),
+    orientation = "h",
+    marker = list(color = ~team_color,
+                  line = list(color = "white", width = 0.5)),
+    text = ~hover_text, hoverinfo = "text"
+  ) |>
+  layout(
+    title  = list(text = "Rushing Yards by Player (min. 3 carries)", font = list(size = 16)),
+    xaxis  = list(title = "Rushing Yards", gridcolor = "#eeeeee"),
+    yaxis  = list(title = ""),
+    paper_bgcolor = "white", plot_bgcolor = "white"
+  )
+```
+
+The EPA per carry is the more nuanced rushing metric: it strips out yards gained on garbage-time runs and captures whether runs were actually moving the needle on scoring probability. Seattle's leading rusher generated an average EPA of 5.0 yards per carry --- meaning each carry contributed to Seattle's expected scoring output above what the league average would manage from those situations. Although he only had 5 carries, Drake Maye was the most efficient of New England's runners with 7.4 yards per carry.
+
+### 4.3 Through the Air
+
+Passing yards and completion percentage are the most widely-cited statistics in football, but they need context: yards gained while trailing by 17 in the fourth quarter are not the same as yards gained on a drive that ties the game. The EPA lens remains the most reliable guide to which quarterback was actually making plays that mattered.
+
+```{r qb-stats}
+#| label: qb-stats
+
+qb_stats |>
+  dplyr::select(team, player, att, comp, comp_pct, yards, tds, ints, sacks,
+                avg_epa, passer_rating) |>
+  gt() |>
+  tab_header(
+    title    = "Quarterback Performance",
+    subtitle = "Super Bowl LX"
+  ) |>
+  cols_label(
+    team          = "Team",
+    player        = "QB",
+    att           = "Att",
+    comp          = "Comp",
+    comp_pct      = "Comp%",
+    yards         = "Yards",
+    tds           = "TDs",
+    ints          = "INTs",
+    sacks         = "Sacks",
+    avg_epa       = "EPA/att",
+    passer_rating = "Rating"
+  ) |>
+  fmt_number(columns = c(comp_pct, avg_epa), decimals = 1) |>
+  tab_style(
+    style     = cell_fill(color = sea_green, alpha = 0.15),
+    locations = cells_body(rows = team == "SEA")
+  ) |>
+  tab_style(
+    style     = cell_fill(color = ne_navy, alpha = 0.08),
+    locations = cells_body(rows = team == "NE")
+  ) |>
+  tab_footnote(
+    footnote  = "EPA/att: average Expected Points Added per pass attempt (nflfastR model); passer rating via standard NFL formula.",
+    locations = cells_column_labels(columns = avg_epa)
+  )
+```
+
+The table tells the story in numbers, but the play-by-play data from Part V makes it explicit. Drake Maye's second half unravelled through three catastrophic plays: a sack-fumble at the end of the third quarter (−4.37 EPA), followed by two interceptions deep into the fourth --- one targeting K. Williams (−5.44 EPA) and a decisive late pick intended for K. Boutte (−9.81 EPA, the single highest-leverage play of the game). Together those three plays account for nearly −20 EPA --- roughly equivalent to conceding two touchdowns in expected value terms, gifted directly by the quarterback. The pre-game models could not have anticipated a second-half collapse of that magnitude from a quarterback who had shown composure throughout the 2025 season; that the models underestimated Seattle's margin of victory is, in large part, the story of those three throws.
+
+The receiver data below completes the passing picture, showing where the offensive workload was distributed and which players made the most of their opportunities. The player with the highest receiving yards was New England's Mack Hollins who managed to haul in 4 out of his 8 targets for a total of 78 yards. Rhamondre Stevenson, a running back, was actually one of the most efficient pass-receivers on the day catching all 5 of his targets, and managing to gain 40 yards and a touchdown for the Patriots. Seattle's AJ Barner also had an impressive day, catching all of his 4 targets for 54 yards and a touchdown as well.
+
+```{r receiving}
+#| label: receiving
+
+recv_plot <- recv_stats |>
+  dplyr::slice_head(n = 14) |>
+  dplyr::mutate(
+    team_color = dplyr::if_else(team == "SEA", sea_green, ne_navy),
+    hover_text = paste0(
+      "<b>", player, " (", team, ")</b><br>",
+      recs, "/", targets, " targets | ", yards, " yards | ", tds, " TDs<br>",
+      "Catch%: ", round(catch_pct, 1), "% | YPR: ", round(ypr, 1), "<br>",
+      "Avg EPA/target: ", round(avg_epa, 3)
+    )
+  )
+
+plot_ly(recv_plot) |>
+  add_bars(
+    x = ~yards, y = ~reorder(player, yards),
+    orientation = "h",
+    marker = list(color = ~team_color,
+                  line = list(color = "white", width = 0.5)),
+    text = ~hover_text, hoverinfo = "text"
+  ) |>
+  layout(
+    title  = list(text = "Receiving Yards — Top 14 Players (min. 2 targets)",
+                  font = list(size = 16)),
+    xaxis  = list(title = "Receiving Yards", gridcolor = "#eeeeee"),
+    yaxis  = list(title = ""),
+    paper_bgcolor = "white", plot_bgcolor = "white"
+  )
+```
+
+## Part V: The Plays That Defined the Game
+
+Statistics aggregate the game into averages; individual plays tip the balance. The table below identifies the ten highest-leverage moments of Super Bowl LX, ranked by the absolute magnitude of their Expected Points Added. These are the plays on which the game turned - not necessarily the flashiest, but the most consequential in terms of changing who was likely to win.
+
+```{r top-plays}
+#| label: top-plays
+
+top_plays |>
+  gt() |>
+  tab_header(
+    title    = "Ten Plays That Defined the Game",
+    subtitle = "Ranked by absolute Expected Points Added | positive EPA favours the possessing team"
+  ) |>
+  cols_label(
+    qtr          = "Qtr",
+    time         = "Clock",
+    posteam      = "Team",
+    epa          = "EPA",
+    play_type    = "Type",
+    yards_gained = "Yds",
+    desc         = "Description"
+  ) |>
+  fmt_number(columns = epa, decimals = 2) |>
+  tab_style(
+    style     = cell_text(color = sea_green, weight = "bold"),
+    locations = cells_body(columns = posteam, rows = posteam == "SEA")
+  ) |>
+  tab_style(
+    style     = cell_text(color = ne_red, weight = "bold"),
+    locations = cells_body(columns = posteam, rows = posteam == "NE")
+  ) |>
+  data_color(
+    columns = epa,
+    domain  = c(-10, 4),
+    palette = c(ne_red, "white", sea_green)
+  ) |>
+  tab_style(
+    style     = cell_text(size = "small"),
+    locations = cells_body(columns = desc)
+  )
+```
+
+## Part VI: What the Models Got Right --- and What They Missed
+
+### The Direction
+
+Both models correctly identified Seattle as the more likely winner. This was a genuine probabilistic test, and it is useful to reflect on how well they managed to predict the outcome and manner of the game. The Elo model's 60.3% and the baseline model's 59.1% represent two data-driven estimates that agreed not just on the direction but on the confidence level --- meaningful, but not overwhelming. Seattle's victory validates those inputs. Where the model failed to predict the game was the impressive performance of Seattle's defence - they shut out New England's offence despite them having reasonably impressive offensive efficiency and yardage.
+
+### The Calibration
+
+The pre-game analysis defined four explicit outcome buckets. The actual result --- a 16-point Seattle win --- maps to the 'models underestimated Seattle's dominance' category. The margin exceeded the model's expectation, suggesting Seattle's physical advantages --- particularly their defensive dominance and rushing attack --- were even more pronounced on the day than the season averages implied. One explanation: the Elo model, by design, regresses partially to the mean, which may have caused it to underweight Seattle's genuine structural superiority. General consensus, and bookmakers, had the Seattle as the favourites to win this game, but having looked at the data, it is hard to see what element of these teams' performances would have indicated such a profound winning margin - maybe there is something intangible, and unquantifiable about watching a team, and how they steer through a season towards a Super Bowl. I will certainly attempt to capture whatever it is in future predictions.
+
+### Where the Market Had More Information
+
+The betting markets priced Seattle at approximately 70% - 10 percentage points higher than the models. On this occasion, the market appears to have been better-calibrated: richer on conviction about both the winner and the margin. The most plausible explanation is that sharp bettors incorporated information our models couldn't --- injury news, coaching matchup tendencies, player motivation --- that the season-long statistical record simply doesn't encode. This is the challenge in sports forecasting: price discovery in a deep betting market aggregates thousands of individual beliefs, some of which carry information that is simply not available in a play-by-play dataset.
+
+### Model Blind Spots Revisited
+
+The pre-game article explicitly catalogued what the models could not capture: key injuries, halftime adjustments, turnover luck, coaching decisions, and the compound randomness of individual moments. Looking at the actual game: New England committed more turnovers 3 to Seattle's 0. Turnover differential is consistently one of the strongest single-game predictors in NFL data --- and here it aligned with the models' pre-game favourite. Whether the coaching adjustments or the individual moments mattered more is a question the data cannot fully resolve --- but the EPA chart is an honest ledger of value generated and destroyed, and that ledger tells its own story.
+
+## Conclusion
+
+In the case of Super Bowl LX, the models correctly identified Seattle as the likely winner, consistent with a dominant defensive unit, a balanced offensive profile, and a 73-point Elo advantage accumulated across 17 regular-season weeks and two playoff victories. The Seahawks' 29-13 victory validates those inputs. The gaps between the predicted and actual scores offer the most interesting material: not as failures, but as calibration data for future models. I don't think many, myself included, could foresee how convincingly the Seahawks would win this game, or how much the Patriots would struggle to put points on the board - it was a great game, and one that Seattle fans will have thoroughly enjoyed - as well as any NFL fans who dislike the Patriots...
+
+------------------------------------------------------------------------
+
+## Technical Appendix
+
+### Data Sources
+
+All data sourced from [nflverse](https://nflverse.nflverse.com/):
+
+-   `nflreadr::load_schedules(2025)` --- game results, schedules, and game metadata
+-   `nflfastR::load_pbp(2025)` --- play-by-play data with pre-computed EP/WP models
+
+### Key Metrics
+
+**Expected Points Added (EPA)**: nflfastR's EPA model estimates the expected points value of each field situation (score, down, distance, yard line, time) using historical NFL data. A positive EPA indicates a play that increased the possessing team's probability-weighted expected score; negative EPA means value was destroyed. EPA removes the ambiguity of raw yardage by contextualising every gain against the game situation.
+
+**Win Probability (WP)**: The nflfastR WP model estimates the probability that a given team wins the game, conditioned on all observable in-game state variables at the time of each play. Both EPA and WP are estimated quantities --- they represent the expectation over the historical distribution of outcomes from similar situations, not a certainty about any individual play.
+
+**Passer Rating**: Computed using the standard NFL formula across five inputs --- completion percentage, yards per attempt, touchdown rate, interception rate --- bounded between 0 and 158.3.
+
+### Software
+
+-   R 4.4.0 \| tidyverse 2.0.0 \| nflfastR 4.6.1 \| nflreadr 1.4.1
+-   plotly 4.10.4 \| gt 0.10.0 \| Quarto 1.4.553
+
+------------------------------------------------------------------------
+
+**Acknowledgments:** This analysis uses the nflverse data ecosystem, maintained by Sebastian Carl, Ben Baldwin, and contributors. The Elo methodology is inspired by FiveThirtyEight's NFL model (now archived via ABC News).
