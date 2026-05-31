@@ -1,12 +1,6 @@
 [
   {
-    "listing": "/people/richmond-india/index.html",
-    "items": [
-      "/posts/copulas_v1/index.html"
-    ]
-  },
-  {
-    "listing": "/people/stanley-rob/index.html",
+    "listing": "/people/broughton-tara/index.html",
     "items": []
   },
   {
@@ -17,37 +11,6 @@
       "/publications/25_the_split/index.html",
       "/posts/RSScomp2026/index.html",
       "/posts/the_split/SPLitBlogPost.html"
-    ]
-  },
-  {
-    "listing": "/people/broughton-tara/index.html",
-    "items": []
-  },
-  {
-    "listing": "/posts/index.html",
-    "items": [
-      "/posts/RSScomp2026/index.html",
-      "/posts/copulas_v1/index.html",
-      "/posts/superbowl/Superbowl-pregame-analysis.html",
-      "/posts/basketball_1/index.html",
-      "/posts/the_split/SPLitBlogPost.html"
-    ]
-  },
-  {
-    "listing": "/publications/index.html",
-    "items": [
-      "/publications/25_kairosis/index.html",
-      "/publications/25_the_split/index.html",
-      "/publications/24_skew/index.html",
-      "/publications/24_wavelet/index.html",
-      "/publications/23_elo/index.html",
-      "/publications/22_bookings/index.html"
-    ]
-  },
-  {
-    "listing": "/people/bingham-rich/index.html",
-    "items": [
-      "/posts/basketball_1/index.html"
     ]
   },
   {
@@ -69,6 +32,41 @@
     ]
   },
   {
+    "listing": "/publications/index.html",
+    "items": [
+      "/publications/25_kairosis/index.html",
+      "/publications/25_the_split/index.html",
+      "/publications/24_skew/index.html",
+      "/publications/24_wavelet/index.html",
+      "/publications/23_elo/index.html",
+      "/publications/22_bookings/index.html"
+    ]
+  },
+  {
+    "listing": "/news/index.html",
+    "items": [
+      "/news/2026_3_13_roses/index.html",
+      "/news/2025_fac/index.html",
+      "/news/2025_9_1_RSSinter/index.html"
+    ]
+  },
+  {
+    "listing": "/posts/index.html",
+    "items": [
+      "/posts/RSScomp2026/index.html",
+      "/posts/copulas_v1/index.html",
+      "/posts/superbowl/Superbowl-pregame-analysis.html",
+      "/posts/basketball_1/index.html",
+      "/posts/the_split/SPLitBlogPost.html"
+    ]
+  },
+  {
+    "listing": "/people/richmond-india/index.html",
+    "items": [
+      "/posts/copulas_v1/index.html"
+    ]
+  },
+  {
     "listing": "/people/powell-ben/index.html",
     "items": [
       "/publications/22_bookings/index.html",
@@ -78,11 +76,13 @@
     ]
   },
   {
-    "listing": "/news/index.html",
+    "listing": "/people/stanley-rob/index.html",
+    "items": []
+  },
+  {
+    "listing": "/people/bingham-rich/index.html",
     "items": [
-      "/news/2026_3_13_roses/index.html",
-      "/news/2025_fac/index.html",
-      "/news/2025_9_1_RSSinter/index.html"
+      "/posts/basketball_1/index.html"
     ]
   }
 ]
