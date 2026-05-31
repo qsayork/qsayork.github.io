@@ -1,6 +1,6 @@
 ---
-title: "RSS Prediction Competition"
-date: "3/26/2026"
+title: "RSS Prediction Competition 2026"
+date: "6/1/2026"
 author: "Jess Hargreaves"
 description: "Can you predict how many medals teams will win?"
 format: html
@@ -10,4 +10,69 @@ categories:
   - Commonwealth Games
 ---
 
-## This is the RSS prediction competition placeholder
+## **RSS Commonwealth Games Prediction Competition 2026**
+
+### Context
+
+Each summer the Royal Statistical Society's Statistics in Sport Section organizes a prediction competition. For 2026 the competition involves predicting the medals table for the Glasgow Commonwealth Games.
+
+For the purposes of this competition the true final ranking will be determined by the number of gold medals won by each country. Silver medals will be used only to break ties between countries with equal numbers of gold medals. Bronze medals will be used to break ties between countries after silver medals are accounted for. Countries still tied after accounting for bronze medals will remain tied.
+
+### Scoring
+
+Predicted rankings will be scored using a statistic called Kendall's tau, or the Kendall rank correlation coefficient. There are (at least) two ways to compute this statistic, which shed light on its meaning. To understand what the statistic quantifies it is first necessary to think about the all the possible pair-wise comparisons between countries. With $n$ participating countries there are $n(n-1)/2= {n\choose 2}$ of these. A forecaster will gain points for every pair which they have placed in the correct order, and they will lose a point for every pair which they placed in the wrong order. If a pair countries are tied, either in the predicted ranking or the true ranking, this pair does not contribute to the score. The score is then scaled by the total number of pairs so that it falls between -1 and 1.
+
+We can write this down as $$\begin{align} \tau &= \frac{\text{number of concordant pairs} - \text{number of discordant pairs}}{\text{number of pairs}}\\
+        &= \frac{2}{n(n-1)}\sum_{i<j}\text{sign}(R_{i}-R_{j})\text{sign}(S_{i}-S_{j})
+        \end{align}
+$$ where 'concordant' is a word used in the academic literature to mean 'in agreement'. Similarly 'discordant' means 'in disagreement'. For example, if a forecaster ranks Kiribati higher than Tanzania and, indeed, Kiribati is higher than Tanzania in the final true ranking then we say that the forecaster has a concordant pair with the true ranking. As alluded to in the equation above, it is also possible to show that Kendall's tau is the correlation between the signs of the differences in ranks. In this expression $R_{i}$ denotes the numerical rank assigned by a forecaster to a country (e.g. if a forecaster predicted country $i$ to be second from the top in the medals table they would set $R_{i}=2$). The quantity $S_{i}$ denotes the true rank for country $i$. The $\text{sign}$ function used here returns value one when its argument is positive, minus one when its argument is negative and zero when its argument is zero.
+
+There are 74 countries participating in the 2026 Commonwealth Games. In the submission template you will find a list of the competing countries and, as a default, they are all ranked jointly at 74th. This default entry will receive a Kendall's tau score of zero because, as mentioned above, tied pairs contribute nothing to the score - they are considered neither concordant nor discordant. Forecasters are invited to modify the ranks in any way they see fit. You could, for example,
+
+-   cluster countries into groups all with the same rank,
+
+-   use non-integer ranks,
+
+-   use ranks that go below 1!
+
+The only thing that matters is that your ranks allow for the pairwise comparisons that contribute to Kendall's tau.
+
+### Submission Template
+
+You can download the submission template [here](https://drive.google.com/file/d/1kNulsBzHtgfF6LGzcD72miQF6aQzzYoz/view?usp=sharing). Only modify the numbers in the Rank column. In particular do not permute the rows of the countries.
+
+Email completed submissions to ben.powell\@york.ac.uk with the subject line SiS forecasting competition 2026. This email should contain an attached .csv file called "RSS_pred_comp_submission_NAME.csv" where NAME is the name you would like to appear on the leader board.
+
+If you would like to be considered for the methodology prize, please provide a brief description of how you made your forecast predictions.
+
+Please make your submissions before 23:59, Wednesday, 22 July 2026. The games start on Friday 26th July but it will be necessary to have submission files a bit earlier in order to initialize the forecast scoring procedure and the leader board.
+
+### Prizes
+
+The principal and most valuable prize for winning the forecasting competition is prestige (and a certificate)! Special attention and corresponding certificates will be awarded for
+
+1.  **Overall Winner** - the entry with the best score (distance from the true ranking at the end of the games).
+
+2.  **Methodology Prize** - chosen by the judging panel, based on the methodology used.
+
+3.  **Student Prize** - awarded by the judging panel (based on the score/methodology used) to an entry where at least one team member has e-Student Membership of the RSS.
+
+The winners of these three awards will also be invited to the Royal Statistical Society conference to present their methods. This year's conference will be held in Brighton from 7^th^-10^th^ September, with the Sports Day happening on 8^th^ September. Conference fees and UK travel/accommodation costs are provided. There is also a school prize, but the winner will not be invited to the RSS conference.
+
+4.  **School Student Prize** - awarded by the judging panel (based on the score/methodology used) to an entry by a (team of) school pupil(s).
+
+### Rules
+
+1.  **The goal of the competition is to predict the medals table for the Glasgow Commonwealth Games.**
+
+2.  Entrants are free to use any data they wish, provided it is publicly available. This includes data scraped from public websites.
+
+3.  Rank the 74 nations in the submission template.
+
+4.  Deadline: 23:59, Wednesday, 22 July 2026.
+
+5.  If you would like to be considered for the methodology prizes (see next), please provide a brief description of how you made your forecast predictions.
+
+6.  Participants are free to enter either as individuals or as teams.
+
+7.  Entrants may update their predictions at any point before the start of the tournament by submitting a new entry but only the most recent submission will be scored.
