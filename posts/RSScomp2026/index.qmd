@@ -12,6 +12,8 @@ categories:
 
 ## **RSS Commonwealth Games Prediction Competition 2026**
 
+{{< video https://www.youtube.com/embed/NvPKFIUHr3Y?si=319gVvziteLMmrt9 >}}
+
 ### Context
 
 Each summer the Royal Statistical Society's Statistics in Sport Section organizes a prediction competition. For 2026 the competition involves predicting the medals table for the Glasgow Commonwealth Games.
@@ -43,7 +45,7 @@ You can download the submission template [here](https://drive.google.com/file/d/
 
 Email completed submissions to ben.powell\@york.ac.uk with the subject line SiS forecasting competition 2026. This email should contain an attached .csv file called "RSS_pred_comp_submission_NAME.csv" where NAME is the name you would like to appear on the leader board.
 
-If you would like to be considered for the methodology prize, please provide a brief description of how you made your forecast predictions.  Please also indicate if you are eligible for either of the student prizes.
+If you would like to be considered for the methodology prize, please provide a brief description of how you made your forecast predictions. Please also indicate if you are eligible for either of the student prizes.
 
 Please make your submissions before 23:59, Wednesday, 22^nd^ July 2026 (the games start on Thursday 23^th^ July).
 
