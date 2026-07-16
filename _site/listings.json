@@ -33,6 +33,7 @@
   {
     "listing": "/publications/index.html",
     "items": [
+      "/publications/26_jess_paper/index.html",
       "/publications/25_kairosis/index.html",
       "/publications/25_the_split/index.html",
       "/publications/24_skew/index.html",
@@ -55,6 +56,8 @@
       "/publications/22_bookings/index.html",
       "/publications/24_wavelet/index.html",
       "/publications/25_the_split/index.html",
+      "/publications/26_jess_paper/index.html",
+      "/posts/RSScomp2026/index.html",
       "/posts/the_split/SPLitBlogPost.html"
     ]
   },

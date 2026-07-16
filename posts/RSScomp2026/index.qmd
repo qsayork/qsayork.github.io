@@ -78,3 +78,9 @@ The winners of these three awards will also be invited to the Royal Statistical 
 6.  Participants are free to enter either as individuals or as teams.
 
 7.  Entrants may update their predictions at any point before the start of the tournament by submitting a new entry but only the most recent submission will be scored.
+
+### Previous Winners
+
+We recently spoke to Maurice Berk, a previous winner who told us about how he created his entry.  
+
+{{< video https://www.youtube.com/embed/rXAA2C6NQcY?si=SURtSH4xpfWI3ytL >}}

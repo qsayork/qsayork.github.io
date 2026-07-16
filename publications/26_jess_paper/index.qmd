@@ -1,0 +1,15 @@
+---
+title: "Outcome uncertainty and the demand for women's football"
+date: 2026-07-03
+author: ["Babatunde Buraimo","Alex Farnell","Jess Hargreaves","Robert Simmons"]
+publication: "Sports Economic Review, **15**, 100074 (2026)."
+categories: ["Outcome Uncertainty","Football","Women's Football"]
+url_source: https://doi.org/10.1016/j.serev.2026.100074
+url_preprint: 
+journ: "Sports Economic Review"
+issue: 15
+page: 100074
+year: 2026
+image: image.jpg
+editor: 'source'
+---
